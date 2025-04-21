@@ -1,7 +1,4 @@
-import React, {
-  DetailedHTMLProps,
-  SelectHTMLAttributes,
-} from "react";
+import React, { DetailedHTMLProps, SelectHTMLAttributes } from "react";
 
 interface SingleSelectProps
   extends DetailedHTMLProps<
@@ -20,7 +17,7 @@ export const SingleSelect = ({
   ...props
 }: SingleSelectProps) => {
   return (
-    <label className="block text-4xl font-medium">
+    <label className="block text-3xl">
       {label}
       <select
         {...props}
