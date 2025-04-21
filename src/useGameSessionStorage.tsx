@@ -1,11 +1,20 @@
 // useLocalBoardGames.ts
 import { useState, useEffect } from "react";
 
+export interface Vote {
+  participant: string;
+  noGoGames: string;
+  heroGames: string;
+  id: string;
+  createdAt: number;
+}
+
 export interface Session {
   id: string; // Unique identifier
   name: string;
   createdAt: number; // Timestamp
   gameIds: string[];
+  votes: Vote[];
 }
 
 // Schlüssel für localStorage
@@ -40,13 +49,16 @@ export const useLocalSessions = () => {
    * @param game Das zu speichernde Brettspiel (ohne ID und createdAt)
    * @returns Das gespeicherte Brettspiel mit ID und createdAt
    */
-  const saveSession = (game: Omit<Session, "id" | "createdAt">): Session => {
+  const saveSession = (
+    game: Omit<Session, "id" | "createdAt" | "votes">,
+  ): Session => {
     try {
       // ID und Zeitstempel generieren
       const newSession: Session = {
         ...game,
         id: generateId(),
         createdAt: Date.now(),
+        votes: [],
       };
 
       // Neues Spiel zur Liste hinzufügen
@@ -65,11 +77,27 @@ export const useLocalSessions = () => {
     }
   };
 
-  /**
-   * Aktualisiert ein vorhandenes Brettspiel
-   * @param updatedGame Das aktualisierte Brettspiel (mit ID)
-   * @returns Das aktualisierte Brettspiel
-   */
+  const saveVote =
+    (sessionId: string) =>
+    (vote: Omit<Vote, "id" | "createdAt">): Session => {
+      const session = getSessionById(sessionId);
+      if (!session) {
+        throw Error("sessionId is not valid ID");
+      }
+      console.log({ session });
+      const fullVote = {
+        ...vote,
+        createdAt: Date.now(),
+        id: generateId(),
+      };
+      const updatedSession = {
+        ...session,
+        votes: [...session.votes, fullVote],
+      };
+      updateSession(updatedSession);
+      return updatedSession;
+    };
+
   const updateSession = (updatedGame: Session): Session => {
     try {
       // Spiel in der Liste finden und aktualisieren
@@ -131,6 +159,7 @@ export const useLocalSessions = () => {
     sessions, // Liste aller Spiele
     saveSession, // Neues Spiel speichern
     updateSession, // Vorhandenes Spiel aktualisieren
+    saveVote,
     deleteSession, // Spiel löschen
     getSessionById, // Spiel nach ID suchen
     refreshGames: loadGames, // Spiele neu laden
