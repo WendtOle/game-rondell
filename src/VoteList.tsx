@@ -26,9 +26,7 @@ export const VoteList: React.FC<VoteListProps> = ({ votes }) => {
         itemRenderer={(vote) => (
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="text-lg font-semibold text-gray-800">
-                {vote.participant}
-              </h3>
+              <h3 className="text-3xl text-gray-800">{vote.participant}</h3>
             </div>
           </div>
         )}

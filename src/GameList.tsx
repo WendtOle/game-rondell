@@ -16,7 +16,7 @@ export const BoardGameList: React.FC<BoardGameListProps> = ({
 }) => {
   if (games.length === 0) {
     return (
-      <div className="p-4 text-center text-gray-500">
+      <div className="p-4 text-2xl text-center text-gray-500">
         <p>Keine Brettspiele vorhanden. Füge ein neues Spiel hinzu!</p>
       </div>
     );
@@ -32,10 +32,8 @@ export const BoardGameList: React.FC<BoardGameListProps> = ({
         return (
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="text-lg font-semibold text-gray-800">
-                {game.name}
-              </h3>
-              <div className="mt-1 text-sm text-gray-500 flex gap-4">
+              <h3 className="text-4xl text-gray-800">{game.name}</h3>
+              <div className="mt-1 text-xl text-gray-500 flex gap-4">
                 <span className="flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

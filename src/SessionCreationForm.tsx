@@ -26,7 +26,7 @@ export const SessionCreationForm = ({ gameIds }: SessionCreationFormProps) => {
       <Heading title="Neue Session anlegen" />
       <form className="space-y-4">
         <div>
-          <label className="block text-4xl font-medium">
+          <label className="block text-3xl">
             Spiele:{" "}
             {(gameIds ?? [])
               .map((gameId) => games.find(({ id }) => gameId === id)?.name)

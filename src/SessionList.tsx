@@ -13,7 +13,7 @@ export const SessionList: React.FC<SessionListProps> = ({ onClickSession }) => {
   const { games } = useLocalBoardGames();
   if (sessions.length === 0) {
     return (
-      <div className="p-4 text-center text-gray-500">
+      <div className="p-4 text-2xl text-center text-gray-500">
         <p>Keine Sessions vorhanden. Füge eine neue Sessions hinzu!</p>
       </div>
     );
@@ -27,10 +27,8 @@ export const SessionList: React.FC<SessionListProps> = ({ onClickSession }) => {
       itemRenderer={(session) => {
         return (
           <div>
-            <h3 className="text-lg font-semibold text-gray-800">
-              {session.name}
-            </h3>
-            <div className="mt-1 text-sm text-gray-500 flex gap-4">
+            <h3 className="text-4xl text-gray-800">{session.name}</h3>
+            <div className="mt-1 text-xl text-gray-500 flex gap-4">
               <span className="flex items-center">
                 Spiele:{" "}
                 {(session.gameIds ?? [])

@@ -6,7 +6,7 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const TextInput = ({ label, ...props }: TextInputProps) => {
   return (
-    <label className="block text-4xl font-medium">
+    <label className="block text-3xl">
       {label}
       <input
         {...props}

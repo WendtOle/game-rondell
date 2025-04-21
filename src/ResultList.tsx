@@ -76,7 +76,7 @@ export const ResultList: React.FC<ResultListProps> = ({ sessionId }) => {
         itemRenderer={(id) => (
           <div className="flex flex-row space-x-2">
             <h3
-              className={`text-lg font-semibold text-gray-800 ${result()[id]?.noGo > 0 && displayResults && "line-through"}`}
+              className={`text-3xl text-gray-800 ${result()[id]?.noGo > 0 && displayResults && "line-through"}`}
             >
               {getGameById(id)?.name}
             </h3>
