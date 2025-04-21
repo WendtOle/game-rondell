@@ -5,14 +5,18 @@
   "scripts": {
     "start": "parcel ./src/index.html",
     "format": "prettier --write .",
-    "build": "parcel build ./src/index.html"
+    "build": "parcel build ./src/index.html",
+    "lint": "eslint . --ext .ts --ext .tsx"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^18.2.67",
     "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^8.30.1",
+    "@typescript-eslint/parser": "^8.30.1",
     "autoprefixer": "^10.4.21",
+    "eslint": "^9.25.0",
     "parcel": "^2.12.0",
     "postcss": "^8.5.3",
     "prettier": "^3.2.5",
