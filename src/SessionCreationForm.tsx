@@ -18,7 +18,7 @@ export const SessionCreationForm = ({ gameIds }: SessionCreationFormProps) => {
     if (gameIds.length === 0 || !name) {
       return;
     }
-    saveSession({ name, gameIds });
+    saveSession({ name, gameIds, votes: [] });
   };
 
   return (

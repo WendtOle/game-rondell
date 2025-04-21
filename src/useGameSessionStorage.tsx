@@ -1,5 +1,5 @@
-// useLocalBoardGames.ts
 import { useState, useEffect } from "react";
+import { useSessionId } from "./useSessionId";
 
 export interface Vote {
   participant: string;
@@ -7,31 +7,29 @@ export interface Vote {
   heroGames: string;
   id: string;
   createdAt: number;
+  nominatedGames: string[];
 }
 
 export interface Session {
-  id: string; // Unique identifier
+  id: string;
   name: string;
-  createdAt: number; // Timestamp
+  createdAt: number;
   gameIds: string[];
   votes: Vote[];
 }
 
-// Schlüssel für localStorage
 const STORAGE_KEY = "sessions";
 
 export const useLocalSessions = () => {
+  const { sessionId } = useSessionId();
   const [sessions, setSessions] = useState<Session[]>([]);
 
-  // Beim ersten Rendern laden wir die gespeicherten Spiele
   useEffect(() => {
-    loadGames();
+    window.addEventListener("storage", loadSessions);
+    loadSessions();
   }, []);
 
-  /**
-   * Lädt Brettspiele aus dem localStorage
-   */
-  const loadGames = (): void => {
+  const loadSessions = (): void => {
     try {
       const storedSessions = localStorage.getItem(STORAGE_KEY);
       if (storedSessions) {
@@ -39,35 +37,22 @@ export const useLocalSessions = () => {
       }
     } catch (error) {
       console.error("Fehler beim Laden der Brettspiele:", error);
-      // Im Fehlerfall setzen wir ein leeres Array
       setSessions([]);
     }
   };
 
-  /**
-   * Speichert ein neues Brettspiel im localStorage
-   * @param game Das zu speichernde Brettspiel (ohne ID und createdAt)
-   * @returns Das gespeicherte Brettspiel mit ID und createdAt
-   */
-  const saveSession = (
-    game: Omit<Session, "id" | "createdAt" | "votes">,
-  ): Session => {
+  const saveSession = (game: Omit<Session, "id" | "createdAt">): Session => {
     try {
-      // ID und Zeitstempel generieren
       const newSession: Session = {
         ...game,
         id: generateId(),
         createdAt: Date.now(),
-        votes: [],
       };
 
-      // Neues Spiel zur Liste hinzufügen
       const updatedSessions = [...sessions, newSession];
 
-      // Im localStorage speichern
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedSessions));
+      set(updatedSessions);
 
-      // State aktualisieren
       setSessions(updatedSessions);
 
       return newSession;
@@ -77,26 +62,42 @@ export const useLocalSessions = () => {
     }
   };
 
-  const saveVote =
-    (sessionId: string) =>
-    (vote: Omit<Vote, "id" | "createdAt">): Session => {
-      const session = getSessionById(sessionId);
-      if (!session) {
-        throw Error("sessionId is not valid ID");
-      }
-      console.log({ session });
-      const fullVote = {
-        ...vote,
-        createdAt: Date.now(),
-        id: generateId(),
-      };
-      const updatedSession = {
-        ...session,
-        votes: [...session.votes, fullVote],
-      };
-      updateSession(updatedSession);
-      return updatedSession;
+  const saveVote = (vote: Omit<Vote, "id" | "createdAt">): Session => {
+    const fullVote = {
+      ...vote,
+      createdAt: Date.now(),
+      id: generateId(),
     };
+    if (!getSessionById()) {
+      return saveSession({
+        name: "new-sessions",
+        votes: [fullVote],
+        gameIds: [],
+      });
+    }
+    const session = getSessionById();
+    if (!session) {
+      throw new Error();
+    }
+    const updatedSession = {
+      ...session,
+      votes: [...session.votes, fullVote],
+    };
+    updateSession(updatedSession);
+    return updatedSession;
+  };
+
+  const getPreviouslyNominatedGames = (): string[] => {
+    const session = getSessionById();
+    if (!session) {
+      return [];
+    }
+    const { votes } = session;
+    const nominatedGames = votes.reduce((acc, vote: Vote) => {
+      return [...new Set([...acc, ...vote.nominatedGames])];
+    }, [] as string[]);
+    return nominatedGames;
+  };
 
   const updateSession = (updatedGame: Session): Session => {
     try {
@@ -105,12 +106,8 @@ export const useLocalSessions = () => {
         game.id === updatedGame.id ? updatedGame : game,
       );
 
-      // Im localStorage speichern
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedGames));
-
-      // State aktualisieren
+      set(updatedGames);
       setSessions(updatedGames);
-
       return updatedGame;
     } catch (error) {
       console.error("Fehler beim Aktualisieren der Sessions:", error);
@@ -118,19 +115,17 @@ export const useLocalSessions = () => {
     }
   };
 
-  /**
-   * Löscht ein Brettspiel aus dem localStorage
-   * @param id ID des zu löschenden Brettspiels
-   */
+  const set = (sessions: Session[]) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+    window.dispatchEvent(new StorageEvent("storage"));
+  };
+
   const deleteSession = (id: string): void => {
     try {
-      // Spiel aus der Liste entfernen
       const filteredSessions = sessions.filter((game) => game.id !== id);
 
-      // Im localStorage speichern
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredSessions));
+      set(filteredSessions);
 
-      // State aktualisieren
       setSessions(filteredSessions);
     } catch (error) {
       console.error("Fehler beim Löschen der Session:", error);
@@ -138,13 +133,8 @@ export const useLocalSessions = () => {
     }
   };
 
-  /**
-   * Gibt ein einzelnes Brettspiel anhand seiner ID zurück
-   * @param id ID des gesuchten Brettspiels
-   * @returns Das gefundene Brettspiel oder undefined
-   */
-  const getSessionById = (id: string): Session | undefined => {
-    return sessions.find((game) => game.id === id);
+  const getSessionById = (): Session | undefined => {
+    return sessions.find((game) => game.id === sessionId);
   };
 
   /**
@@ -156,12 +146,13 @@ export const useLocalSessions = () => {
   };
 
   return {
-    sessions, // Liste aller Spiele
-    saveSession, // Neues Spiel speichern
-    updateSession, // Vorhandenes Spiel aktualisieren
+    sessions,
+    saveSession,
+    updateSession,
     saveVote,
-    deleteSession, // Spiel löschen
-    getSessionById, // Spiel nach ID suchen
-    refreshGames: loadGames, // Spiele neu laden
+    deleteSession,
+    getSessionById,
+    refreshGames: loadSessions,
+    getPreviouslyNominatedGames,
   };
 };

@@ -1,65 +1,102 @@
 import React, { useState } from "react";
-import { useLocalBoardGames } from "./useBoardGameStorage";
-import { useLocalSessions } from "./useGameSessionStorage";
+import { BoardGame } from "./useBoardGameStorage";
+import { Session, Vote } from "./useGameSessionStorage";
 import { Button } from "./components/Button";
 import { Heading } from "./components/Heading";
 import { TextInput } from "./components/TextInput";
 import { SingleSelect } from "./components/SingleSelect";
+import { MultiSelect } from "./components/MultiSelect";
 
 interface VoteCreationFormProps {
-  sessionId: string;
+  sessionId?: string;
+  games: BoardGame[];
+  getGameById: (id: string) => BoardGame | undefined;
+  getPreviouslyNominatedGames: (sessionId?: string) => string[];
+  saveVote: (vote: Omit<Vote, "id" | "createdAt">) => Session;
+  setSession: (sessionId: string) => void;
 }
 
-export const VoteCreationForm = ({ sessionId }: VoteCreationFormProps) => {
+export const VoteCreationForm = ({
+  sessionId,
+  games,
+  getGameById,
+  getPreviouslyNominatedGames,
+  saveVote,
+  setSession,
+}: VoteCreationFormProps) => {
   const [participant, setParticipant] = useState("");
-  const { saveVote, getSessionById } = useLocalSessions();
-  const { getGameById } = useLocalBoardGames();
   const [blocked, setBlocked] = useState<string | undefined>();
-  const [hero, setHero] = useState<string | undefined>();
+  const [hero, setHero] = useState<string | undefined>(undefined);
 
-  const gameIds = () => getSessionById(sessionId)?.gameIds;
+  const [selected, setSelected] = useState<string[]>([]);
+  const overallSelected = () => [
+    ...new Set([...getPreviouslyNominatedGames(sessionId), ...selected]),
+  ];
 
   const onSave = () => {
     if (!blocked || !hero) {
       return;
     }
-    saveVote(sessionId)({
+    const session = saveVote({
       participant,
       noGoGames: blocked,
       heroGames: hero,
+      nominatedGames: overallSelected(),
     });
+    setSession(session.id);
+    setParticipant(""), setBlocked(undefined);
+    setHero(undefined);
+  };
+
+  const isDisabled = () => {
+    if (!participant) {
+      return true;
+    }
+    return false;
   };
 
   return (
     <div className="mx-auto p-4">
       <Heading title="Neue Stimme abgeben" />
-      <form className="space-y-4">
+      <div className="space-y-4">
         <TextInput
-          label="Name*"
+          label="Name"
           required
           type="text"
           name="name"
           value={participant}
           onChange={(e) => setParticipant(e.target.value)}
         />
-        <SingleSelect
-          label="No way"
-          name="complexity"
-          value={blocked}
-          onChange={(e) => setBlocked(e.target.value)}
-          options={gameIds() ?? []}
+        <MultiSelect
+          options={games.map(({ id }) => id)}
+          label="Nominierte Spiele"
+          selected={overallSelected()}
+          onChange={(selected) => setSelected(selected)}
           getOptionLabel={(id) => getGameById(id)?.name}
+          disabled={getPreviouslyNominatedGames(sessionId)}
         />
         <SingleSelect
-          label="Hero"
+          label="Bevorzugtes Spiel"
           name="complexity"
           value={hero}
           onChange={(e) => setHero(e.target.value)}
-          options={gameIds() ?? []}
+          options={overallSelected()}
           getOptionLabel={(id) => getGameById(id)?.name}
         />
-        <Button title="Stimme abgeben" onClick={onSave} />
-      </form>
+        <SingleSelect
+          label="Absolutes No-Go-Spiel"
+          name="complexity"
+          value={blocked}
+          onChange={(e) => setBlocked(e.target.value)}
+          options={overallSelected()}
+          getOptionLabel={(id) => getGameById(id)?.name}
+        />
+        <Button
+          title="Stimme abgeben"
+          onClick={onSave}
+          disabled={isDisabled()}
+        />
+      </div>
     </div>
   );
 };

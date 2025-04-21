@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GameDuration } from "./types";
-import { useLocalBoardGames } from "./useBoardGameStorage";
+import { BoardGame } from "./useBoardGameStorage";
 import { Heading } from "./components/Heading";
 import { Button } from "./components/Button";
 import { TextInput } from "./components/TextInput";
@@ -8,12 +8,15 @@ import { SingleSelect } from "./components/SingleSelect";
 
 const gameDuration: GameDuration[] = Object.values(GameDuration);
 
-export const GameCreationForm = () => {
+interface GameCreationFormProps {
+  saveGame: (game: Omit<BoardGame, "id" | "createdAt">) => BoardGame;
+}
+
+export const GameCreationForm = ({ saveGame }: GameCreationFormProps) => {
   const [name, setName] = useState("");
   const [minPlayer, setMinPalyer] = useState(2);
   const [maxPlayer, setMaxPalyer] = useState(4);
   const [duration, setDuartion] = useState<GameDuration | undefined>();
-  const { saveGame } = useLocalBoardGames();
 
   const onSave = () => {
     if (!duration) {
@@ -25,12 +28,16 @@ export const GameCreationForm = () => {
       maxPlayers: maxPlayer,
       playingTime: duration,
     });
+    setName("");
+    setMinPalyer(2);
+    setMaxPalyer(4);
+    setDuartion(undefined);
   };
 
   return (
     <div className="mx-auto p-4">
       <Heading title="Neues Brettspiel hinzufügen" />
-      <form className="space-y-4">
+      <div className="space-y-4">
         <TextInput
           label="Name*"
           required
@@ -66,7 +73,7 @@ export const GameCreationForm = () => {
           onChange={(e) => setDuartion(e.target.value as GameDuration)}
         />
         <Button title="Spiel hinzufügen" onClick={onSave} />
-      </form>
+      </div>
     </div>
   );
 };

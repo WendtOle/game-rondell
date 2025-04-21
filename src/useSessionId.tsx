@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 
-export const useQuery = () => {
+export const useSessionId = (): {
+  sessionId: string | undefined;
+  set: (key: string, value: string) => void;
+} => {
   // Use state to store the current params
   const [searchParams, setSearchParams] = useState(
     () => new URLSearchParams(window.location.search),
@@ -8,6 +11,7 @@ export const useQuery = () => {
 
   // Create a derived params object
   const params = Object.fromEntries(searchParams);
+  const sessionId = params["session"] ?? undefined;
 
   // Listen for popstate events (browser back/forward buttons)
   useEffect(() => {
@@ -36,13 +40,7 @@ export const useQuery = () => {
   }, []);
 
   return {
-    // Expose the params object
-    params,
-
-    // Get a single parameter value
-    get: (key) => searchParams.get(key),
-
-    // Set a single parameter and update URL
+    sessionId,
     set: (key, value) => {
       const params = new URLSearchParams(window.location.search);
       params.set(key, value);
@@ -51,28 +49,8 @@ export const useQuery = () => {
         "",
         `${window.location.pathname}?${params.toString()}`,
       );
-      setSearchParams(params); // Update internal state
-      notifyParamChange(); // Notify other components
-    },
-
-    // Remove a parameter and update URL
-    remove: (key) => {
-      const params = new URLSearchParams(window.location.search);
-      params.delete(key);
-      window.history.pushState(
-        {},
-        "",
-        `${window.location.pathname}?${params.toString()}`,
-      );
-      setSearchParams(params); // Update internal state
-      notifyParamChange(); // Notify other components
-    },
-
-    // Clear all parameters and update URL
-    clear: () => {
-      window.history.pushState({}, "", window.location.pathname);
-      setSearchParams(new URLSearchParams()); // Update internal state with empty params
-      notifyParamChange(); // Notify other components
+      setSearchParams(params);
+      notifyParamChange();
     },
   };
 };

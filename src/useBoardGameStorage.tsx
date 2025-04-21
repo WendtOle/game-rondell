@@ -94,19 +94,12 @@ export const useLocalBoardGames = () => {
     }
   };
 
-  /**
-   * Löscht ein Brettspiel aus dem localStorage
-   * @param id ID des zu löschenden Brettspiels
-   */
   const deleteGame = (id: string): void => {
     try {
-      // Spiel aus der Liste entfernen
       const filteredGames = boardGames.filter((game) => game.id !== id);
 
-      // Im localStorage speichern
       localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredGames));
 
-      // State aktualisieren
       setBoardGames(filteredGames);
     } catch (error) {
       console.error("Fehler beim Löschen des Brettspiels:", error);
@@ -114,19 +107,10 @@ export const useLocalBoardGames = () => {
     }
   };
 
-  /**
-   * Gibt ein einzelnes Brettspiel anhand seiner ID zurück
-   * @param id ID des gesuchten Brettspiels
-   * @returns Das gefundene Brettspiel oder undefined
-   */
   const getGameById = (id: string): BoardGame | undefined => {
     return boardGames.find((game) => game.id === id);
   };
 
-  /**
-   * Generiert eine eindeutige ID
-   * @returns Eindeutige ID als String
-   */
   const generateId = (): string => {
     return Date.now().toString(36) + Math.random().toString(36).substring(2);
   };
