@@ -3,7 +3,11 @@ import React, { useState } from "react";
 import { BoardGame, useLocalBoardGames } from "./useBoardGameStorage";
 import { Session, useLocalSessions } from "./useGameSessionStorage";
 
-export const SessionList: React.FC = ({}) => {
+interface SessionListProps {
+  onClickSession: (sessionId: string) => void;
+}
+
+export const SessionList: React.FC<SessionListProps> = ({ onClickSession }) => {
   const { sessions } = useLocalSessions();
   const { games } = useLocalBoardGames();
   if (sessions.length === 0) {
@@ -24,6 +28,7 @@ export const SessionList: React.FC = ({}) => {
               className={
                 "p-4 transition-colors cursor-pointer hover:bg-gray-50 border-l-4 border-transparent"
               }
+              onClick={() => onClickSession(session.id)}
             >
               <div className="flex justify-between items-start">
                 <div>
