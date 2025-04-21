@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { GameDuration } from "./types";
 import { BoardGame, useLocalBoardGames } from "./useBoardGameStorage";
 import { useLocalSessions } from "./useGameSessionStorage";
+import { Heading } from "./components/Heading";
+import { Button } from "./components/Button";
+import { TextInput } from "./components/TextInput";
 
 const gameDuration: GameDuration[] = Object.values(GameDuration);
 
@@ -23,39 +26,25 @@ export const SessionCreationForm = ({ gameIds }: SessionCreationFormProps) => {
 
   return (
     <div className="mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Neue Session anlegen</h2>
+      <Heading title="Neue Session anlegen" />
       <form className="space-y-4">
         <div>
-          <label className="block text-sm font-medium">
+          <label className="block text-4xl font-medium">
             Spiele:{" "}
             {(gameIds ?? [])
               .map((gameId) => games.find(({ id }) => gameId === id)?.name)
               .join(", ")}
           </label>
         </div>
-        <div>
-          <label className="block text-sm font-medium">
-            Name*
-            <input
-              required
-              type="text"
-              name="name"
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
-        </div>
-
-        {/* Buttons */}
-        <div className="flex justify-end space-x-2">
-          <button
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            onClick={onSave}
-          >
-            Session anlegen
-          </button>
-        </div>
+        <TextInput
+          label="Name*"
+          required
+          type="text"
+          name="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <Button title="Session anlegen" onClick={onSave} />
       </form>
     </div>
   );

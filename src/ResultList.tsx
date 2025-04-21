@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useLocalBoardGames } from "./useBoardGameStorage";
 import { useLocalSessions, Vote } from "./useGameSessionStorage";
+import { Button } from "./components/Button";
+import { Heading } from "./components/Heading";
 
 interface ResultListProps {
   sessionId: string;
@@ -66,7 +68,7 @@ export const ResultList: React.FC<ResultListProps> = ({ sessionId }) => {
 
   return (
     <div className="mx-auto p-4 flex flex-col space-y-2">
-      <h2 className="text-2xl font-bold mb-4">Ergebnisse</h2>
+      <Heading title="Ergebnisse" />
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <ul className="divide-y divide-gray-200">
           {sortedGameIds().map((gameId) => (
@@ -102,14 +104,10 @@ export const ResultList: React.FC<ResultListProps> = ({ sessionId }) => {
           ))}
         </ul>
       </div>
-      <div className="flex justify-end space-x-2">
-        <button
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          onClick={() => setDisplayResults((cur) => !cur)}
-        >
-          Ergebnis anzeigen
-        </button>
-      </div>
+      <Button
+        title="Ergebnis anzeigen"
+        onClick={() => setDisplayResults((cur) => !cur)}
+      />
     </div>
   );
 };

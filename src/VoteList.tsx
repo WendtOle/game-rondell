@@ -1,6 +1,7 @@
 // BoardGameList.tsx
 import React from "react";
 import { Vote } from "./useGameSessionStorage";
+import { Heading } from "./components/Heading";
 
 interface VoteListProps {
   votes: Vote[];
@@ -17,7 +18,7 @@ export const VoteList: React.FC<VoteListProps> = ({ votes }) => {
 
   return (
     <div className="mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Abgegebene Stimmen</h2>
+      <Heading title="Abgegebene Stimmen" />
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <ul className="divide-y divide-gray-200">
           {votes.map((vote) => (
