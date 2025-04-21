@@ -18,7 +18,7 @@ export const CollectionView = () => {
     );
 
   return (
-    <div>
+    <div className="mx-auto p-4">
       <BoardGameList
         games={games}
         onSelectGame={onSelectGame}

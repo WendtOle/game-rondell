@@ -2,6 +2,7 @@
 import React from "react";
 import { Vote } from "./useGameSessionStorage";
 import { Heading } from "./components/Heading";
+import { List } from "./components/List";
 
 interface VoteListProps {
   votes: Vote[];
@@ -19,24 +20,19 @@ export const VoteList: React.FC<VoteListProps> = ({ votes }) => {
   return (
     <div className="mx-auto p-4">
       <Heading title="Abgegebene Stimmen" />
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <ul className="divide-y divide-gray-200">
-          {votes.map((vote) => (
-            <li
-              key={vote.id}
-              className={`p-4 transition-colors cursor-pointer hover:bg-gray-50 border-l-4 border-transparent`}
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">
-                    {vote.participant}
-                  </h3>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <List
+        items={votes}
+        getId={({ id }) => id}
+        itemRenderer={(vote) => (
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-800">
+                {vote.participant}
+              </h3>
+            </div>
+          </div>
+        )}
+      />
     </div>
   );
 };

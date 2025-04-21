@@ -3,6 +3,7 @@ import { useLocalBoardGames } from "./useBoardGameStorage";
 import { useLocalSessions, Vote } from "./useGameSessionStorage";
 import { Button } from "./components/Button";
 import { Heading } from "./components/Heading";
+import { List } from "./components/List";
 
 interface ResultListProps {
   sessionId: string;
@@ -69,41 +70,32 @@ export const ResultList: React.FC<ResultListProps> = ({ sessionId }) => {
   return (
     <div className="mx-auto p-4 flex flex-col space-y-2">
       <Heading title="Ergebnisse" />
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <ul className="divide-y divide-gray-200">
-          {sortedGameIds().map((gameId) => (
-            <li
-              key={gameId}
-              className={`p-4 transition-colors cursor-pointer hover:bg-gray-50 border-l-4 border-transparent`}
+      <List
+        items={sortedGameIds()}
+        getId={(id) => id}
+        itemRenderer={(id) => (
+          <div className="flex flex-row space-x-2">
+            <h3
+              className={`text-lg font-semibold text-gray-800 ${result()[id]?.noGo > 0 && displayResults && "line-through"}`}
             >
-              <div className="flex justify-between items-start">
-                <div className="flex flex-row space-x-2">
-                  <h3
-                    className={`text-lg font-semibold text-gray-800 ${result()[gameId]?.noGo > 0 && displayResults && "line-through"}`}
+              {getGameById(id)?.name}
+            </h3>
+            {displayResults && (
+              <div className="flex mt-1">
+                {[...Array(result()[id]?.favourized || 0)].map((_, i) => (
+                  <svg
+                    key={i}
+                    className="w-4 h-4 text-yellow-500 fill-current"
+                    viewBox="0 0 24 24"
                   >
-                    {getGameById(gameId)?.name}
-                  </h3>
-                  {displayResults && (
-                    <div className="flex mt-1">
-                      {[...Array(result()[gameId]?.favourized || 0)].map(
-                        (_, i) => (
-                          <svg
-                            key={i}
-                            className="w-4 h-4 text-yellow-500 fill-current"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                          </svg>
-                        ),
-                      )}
-                    </div>
-                  )}
-                </div>
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                  </svg>
+                ))}
               </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+            )}
+          </div>
+        )}
+      />
       <Button
         title="Ergebnis anzeigen"
         onClick={() => setDisplayResults((cur) => !cur)}
