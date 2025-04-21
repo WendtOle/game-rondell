@@ -1,22 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSessionId } from "./useSessionId";
-
-export interface Vote {
-  participant: string;
-  noGoGames: string;
-  heroGames: string;
-  id: string;
-  createdAt: number;
-  nominatedGames: string[];
-}
-
-export interface Session {
-  id: string;
-  name: string;
-  createdAt: number;
-  gameIds: string[];
-  votes: Vote[];
-}
+import { Session, Vote } from "../types";
 
 const STORAGE_KEY = "sessions";
 

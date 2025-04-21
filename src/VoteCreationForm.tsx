@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BoardGame } from "./hooks/useBoardGameStorage";
-import { Session, Vote } from "./hooks/useGameSessionStorage";
+import { Session, Vote } from "./types";
 import { Button } from "./components/Button";
 import { Heading } from "./components/Heading";
 import { TextInput } from "./components/TextInput";
