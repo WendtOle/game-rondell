@@ -7,11 +7,13 @@ import { List } from "./components/List";
 interface VoteListProps {
   getPreviouslyNominatedGames: (sessionId?: string) => string[];
   getSessionById: (sessionId?: string) => Session | undefined;
+  onDelete: (voteId: string) => void;
 }
 
 export const VoteList: React.FC<VoteListProps> = ({
   getPreviouslyNominatedGames,
   getSessionById,
+  onDelete,
 }) => {
   const votes = () => getSessionById()?.votes ?? [];
   const nominatedGamesChangedSinceVote = (voteId: string) => {
@@ -36,12 +38,22 @@ export const VoteList: React.FC<VoteListProps> = ({
         items={votes()}
         getId={({ id }) => id}
         itemRenderer={(vote) => (
-          <div className="flex justify-between items-center space-x-4 ">
-            <h3 className="text-3xl text-gray-800">{vote.participant}</h3>
+          <div className="flex justify-between items-center space-x-4 w-full">
+            <div>
+              <h3 className="text-3xl text-gray-800">{vote.participant}</h3>
+              {nominatedGamesChangedSinceVote(vote.id) && (
+                <h2 className="text-2xl text-red-400">
+                  Nominated games changed!
+                </h2>
+              )}
+            </div>
             {nominatedGamesChangedSinceVote(vote.id) && (
-              <h2 className="text-2xl text-red-400">
-                Nominated games changed!
-              </h2>
+              <button
+                onClick={() => onDelete(vote.id)}
+                className="text-2xl rounded-lg bg-red-600 text-white px-4 py-1"
+              >
+                Löschen
+              </button>
             )}
           </div>
         )}

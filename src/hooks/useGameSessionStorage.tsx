@@ -71,6 +71,20 @@ export const useLocalSessions = () => {
     return updatedSession;
   };
 
+  const removeVote = (voteId: string) => {
+    const session = getSessionById();
+    if (!session) {
+      throw new Error();
+    }
+    const updatedSession = {
+      ...session,
+      votes: session.votes.filter(({ id }) => id !== voteId),
+    };
+    updateSession(updatedSession);
+    return updatedSession;
+    //TODO
+  };
+
   const getPreviouslyNominatedGames = (): string[] => {
     const session = getSessionById();
     if (!session) {
@@ -144,5 +158,6 @@ export const useLocalSessions = () => {
     refreshGames: loadSessions,
     getPreviouslyNominatedGames,
     sessionSummaryList,
+    removeVote,
   };
 };

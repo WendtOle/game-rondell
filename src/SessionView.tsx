@@ -16,6 +16,7 @@ export const SessionView = () => {
     saveVote,
     getSessionById,
     sessionSummaryList,
+    removeVote,
   } = useLocalSessions();
 
   const onSelectSessions = (sessionId) => params.set("session", sessionId);
@@ -32,6 +33,7 @@ export const SessionView = () => {
       <VoteList
         getPreviouslyNominatedGames={getPreviouslyNominatedGames}
         getSessionById={getSessionById}
+        onDelete={(id) => removeVote(id)}
       />
       <ResultList
         votes={getSessionById()?.votes ?? []}

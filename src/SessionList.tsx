@@ -11,14 +11,6 @@ export const SessionList: React.FC<SessionListProps> = ({
   onClickSession,
   sessions,
 }) => {
-  if (sessions.length === 0) {
-    return (
-      <div className="p-4 text-2xl text-center text-gray-500">
-        <p>Keine Sessions vorhanden. Füge eine neue Sessions hinzu!</p>
-      </div>
-    );
-  }
-
   return (
     <List
       items={[...sessions, { id: "", summary: "Neue Session erstellen ..." }]}
