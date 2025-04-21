@@ -17,7 +17,7 @@ export const SessionView = () => {
   }
 
   return (
-    <div className="mx-auto p-4">
+    <div className="mx-auto p-4 w-4xl">
       <Heading title={`Session: ${session?.name}`} />
       <VoteCreationForm sessionId={session.id} />
       <VoteList votes={session.votes} />
