@@ -1,30 +1,13 @@
-import React, { useState } from "react";
-import { GameCreationForm } from "./GameCreationForm";
-import { BoardGameList } from "./GameList";
-import { useLocalBoardGames } from "./useBoardGameStorage";
-import { SessionCreationForm } from "./SessionCreationForm";
-import { SessionList } from "./SessionList";
+import React from "react";
+import { useQuery } from "./useQuery";
+import { CollectionView } from "./CollectionView";
+import { SessionView } from "./SessionView";
 
 export const App = () => {
-  const { games } = useLocalBoardGames();
-  const [marked, setMarked] = useState<string[]>([]);
-  const onSelectGame = (id: string) =>
-    setMarked(
-      marked.includes(id)
-        ? marked.filter((game) => game !== id)
-        : [...marked, id],
-    );
+  const { params } = useQuery();
 
-  return (
-    <div>
-      <BoardGameList
-        games={games}
-        onSelectGame={onSelectGame}
-        selected={marked}
-      />
-      <GameCreationForm />
-      <SessionList />
-      <SessionCreationForm gameIds={marked} />
-    </div>
-  );
+  if (!params.session) {
+    return <CollectionView />;
+  }
+  return <SessionView />;
 };
