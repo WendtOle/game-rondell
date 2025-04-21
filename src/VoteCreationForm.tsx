@@ -34,9 +34,6 @@ export const VoteCreationForm = ({
   ];
 
   const onSave = () => {
-    if (!blocked || !hero) {
-      return;
-    }
     const session = saveVote({
       participant,
       noGoGames: blocked,

@@ -13,8 +13,8 @@ export interface Game {
 
 export interface Vote {
   participant: string;
-  noGoGames: string;
-  heroGames: string;
+  noGoGames?: string;
+  heroGames?: string;
   id: string;
   createdAt: number;
   nominatedGames: string[];

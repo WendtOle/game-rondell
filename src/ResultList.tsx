@@ -11,11 +11,6 @@ interface ResultListProps {
   getGameById: (id: string) => BoardGame | undefined;
 }
 
-interface Result {
-  noGo: number;
-  favourized: number;
-}
-
 export const ResultList: React.FC<ResultListProps> = ({
   votes,
   nominatedGameIds,
@@ -23,75 +18,71 @@ export const ResultList: React.FC<ResultListProps> = ({
 }) => {
   const [displayResults, setDisplayResults] = useState(false);
 
-  const result = () => {
-    return votes.reduce(
-      (acc, curr: Vote) => {
-        const { noGoGames, heroGames } = curr;
-        const empty = { noGo: 0, favourized: 0 };
-        const noGoGame = acc[noGoGames] ?? empty;
-        const favourizedGame = acc[heroGames] ?? empty;
-        return {
-          ...acc,
-          [noGoGames]: {
-            ...noGoGame,
-            noGo: noGoGame.noGo + 1,
-          },
-          [heroGames]: {
-            ...favourizedGame,
-            favourized: favourizedGame.favourized + 1,
-          },
-        };
-      },
-      {} as Record<string, Result>,
-    );
-  };
+  const result = votes.reduce(
+    (acc, curr: Vote) => {
+      const { noGoGames, heroGames } = curr;
+      return {
+        noGo: [...(acc.noGo ?? []), ...(noGoGames ? [noGoGames] : [])],
+        favoured: {
+          ...acc.favoured,
+          ...(heroGames
+            ? {
+                [heroGames]: (acc[heroGames] ?? 0) + 1,
+              }
+            : {}),
+        },
+      };
+    },
+    {} as { noGo: string[]; favoured: Record<string, number> },
+  );
 
-  const likabelityValue = (result?: Result) => {
-    if (!result) {
-      return 0;
-    }
-    const { noGo, favourized } = result;
-    if (noGo > 0) {
+  const likabelityValue = (gameId: string): number => {
+    if (result.noGo.includes(gameId)) {
       return -100;
     }
-    return favourized;
+    return result.favoured[gameId] ?? 0;
   };
 
-  const sortedGameIds = () =>
-    [...nominatedGameIds].sort(
-      (left, right) =>
-        likabelityValue(result()[right]) - likabelityValue(result()[left]),
-    );
+  const sortedGameIds = [...nominatedGameIds].sort(
+    (left, right) => likabelityValue(right) - likabelityValue(left),
+  );
 
   return (
     <div className="mx-auto p-4 flex flex-col space-y-2">
       <Heading title="Ergebnisse" />
       {displayResults && (
         <List
-          items={sortedGameIds()}
+          items={sortedGameIds}
           getId={(id) => id}
-          itemRenderer={(id) => (
-            <div className="flex flex-row space-x-2">
-              <h3
-                className={`text-3xl text-gray-800 ${result()[id]?.noGo > 0 && displayResults && "line-through"}`}
-              >
-                {getGameById(id)?.name}
-              </h3>
-              {displayResults && (
-                <div className="flex mt-1">
-                  {[...Array(result()[id]?.favourized || 0)].map((_, i) => (
-                    <svg
-                      key={i}
-                      className="w-4 h-4 text-yellow-500 fill-current"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                    </svg>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          itemRenderer={(id) => {
+            if (!displayResults) {
+              return <></>;
+            }
+            const isNoGo = result.noGo.includes(id);
+            const amountOfStars = !isNoGo ? result.favoured[id] || 0 : 0;
+            return (
+              <div className="flex flex-row space-x-2">
+                <h3
+                  className={`text-3xl text-gray-800 ${isNoGo && "line-through"}`}
+                >
+                  {getGameById(id)?.name}
+                </h3>
+                {displayResults && (
+                  <div className="flex mt-1">
+                    {[...Array(amountOfStars)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className="w-4 h-4 text-yellow-500 fill-current"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                      </svg>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          }}
         />
       )}
       <Button
