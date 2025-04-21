@@ -137,6 +137,11 @@ export const useLocalSessions = () => {
     return sessions.find((game) => game.id === sessionId);
   };
 
+  const sessionSummaryList = sessions.map((session) => ({
+    id: session.id,
+    summary: `Session - ${new Date(session.createdAt).toLocaleString()}`,
+  }));
+
   /**
    * Generiert eine eindeutige ID
    * @returns Eindeutige ID als String
@@ -154,5 +159,6 @@ export const useLocalSessions = () => {
     getSessionById,
     refreshGames: loadSessions,
     getPreviouslyNominatedGames,
+    sessionSummaryList,
   };
 };

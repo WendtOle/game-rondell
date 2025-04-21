@@ -6,12 +6,19 @@ import { ResultList } from "./ResultList";
 import { GameCreationForm } from "./GameCreationForm";
 import { useLocalBoardGames } from "./hooks/useBoardGameStorage";
 import { useLocalSessions } from "./hooks/useGameSessionStorage";
+import { SessionList } from "./SessionList";
 
 export const SessionView = () => {
   const params = useSessionId();
   const { games, getGameById, saveGame } = useLocalBoardGames();
-  const { getPreviouslyNominatedGames, saveVote, getSessionById } =
-    useLocalSessions();
+  const {
+    getPreviouslyNominatedGames,
+    saveVote,
+    getSessionById,
+    sessionSummaryList,
+  } = useLocalSessions();
+
+  const onSelectSessions = (sessionId) => params.set("session", sessionId);
 
   return (
     <div className="mx-auto p-4 w-4xl">
@@ -20,7 +27,7 @@ export const SessionView = () => {
         getGameById={getGameById}
         getPreviouslyNominatedGames={getPreviouslyNominatedGames}
         saveVote={saveVote}
-        setSession={(sessionId) => params.set("session", sessionId)}
+        setSession={onSelectSessions}
       />
       <VoteList
         getPreviouslyNominatedGames={getPreviouslyNominatedGames}
@@ -32,6 +39,10 @@ export const SessionView = () => {
         nominatedGameIds={getPreviouslyNominatedGames()}
       />
       <GameCreationForm saveGame={saveGame} />
+      <SessionList
+        sessions={sessionSummaryList}
+        onClickSession={onSelectSessions}
+      />
     </div>
   );
 };

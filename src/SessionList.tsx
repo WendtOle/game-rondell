@@ -1,16 +1,16 @@
 // BoardGameList.tsx
 import React from "react";
-import { useLocalBoardGames } from "./hooks/useBoardGameStorage";
-import { useLocalSessions } from "./hooks/useGameSessionStorage";
 import { List } from "./components/List";
 
 interface SessionListProps {
   onClickSession: (sessionId: string) => void;
+  sessions: Array<{ id: string; summary: string }>;
 }
 
-export const SessionList: React.FC<SessionListProps> = ({ onClickSession }) => {
-  const { sessions } = useLocalSessions();
-  const { games } = useLocalBoardGames();
+export const SessionList: React.FC<SessionListProps> = ({
+  onClickSession,
+  sessions,
+}) => {
   if (sessions.length === 0) {
     return (
       <div className="p-4 text-2xl text-center text-gray-500">
@@ -21,21 +21,13 @@ export const SessionList: React.FC<SessionListProps> = ({ onClickSession }) => {
 
   return (
     <List
-      items={sessions}
+      items={[...sessions, { id: "", summary: "Neue Session erstellen ..." }]}
       getId={({ id }) => id}
       onClick={({ id }) => onClickSession(id)}
       itemRenderer={(session) => {
         return (
           <div>
-            <h3 className="text-4xl text-gray-800">{session.name}</h3>
-            <div className="mt-1 text-xl text-gray-500 flex gap-4">
-              <span className="flex items-center">
-                Spiele:{" "}
-                {(session.gameIds ?? [])
-                  .map((gameId) => games.find(({ id }) => gameId === id)?.name)
-                  .join(", ")}
-              </span>
-            </div>
+            <h3 className="text-4xl text-gray-800">{session.summary}</h3>
           </div>
         );
       }}
