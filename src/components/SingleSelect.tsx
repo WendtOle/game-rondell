@@ -1,6 +1,5 @@
 import React, {
   DetailedHTMLProps,
-  HTMLAttributes,
   SelectHTMLAttributes,
 } from "react";
 
@@ -10,7 +9,7 @@ interface SingleSelectProps
     HTMLSelectElement
   > {
   label: string;
-  options: any[];
+  options: string[];
   getOptionLabel?: (id: string) => string | undefined;
 }
 

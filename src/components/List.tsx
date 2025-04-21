@@ -1,8 +1,8 @@
-import React from "react";
+import React, { ReactElement } from "react";
 
 interface ListProps<T> {
   items: T[];
-  itemRenderer: (item: T) => any;
+  itemRenderer: (item: T) => ReactElement;
   getId: (item: T) => string;
   isSelected?: (item: T) => boolean;
   onClick?: (item: T) => void;

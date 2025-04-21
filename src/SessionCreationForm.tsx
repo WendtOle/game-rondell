@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import { GameDuration } from "./types";
-import { BoardGame, useLocalBoardGames } from "./useBoardGameStorage";
+import { useLocalBoardGames } from "./useBoardGameStorage";
 import { useLocalSessions } from "./useGameSessionStorage";
 import { Heading } from "./components/Heading";
 import { Button } from "./components/Button";
 import { TextInput } from "./components/TextInput";
-
-const gameDuration: GameDuration[] = Object.values(GameDuration);
 
 interface SessionCreationFormProps {
   gameIds: string[];

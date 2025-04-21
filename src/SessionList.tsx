@@ -1,7 +1,7 @@
 // BoardGameList.tsx
-import React, { useState } from "react";
-import { BoardGame, useLocalBoardGames } from "./useBoardGameStorage";
-import { Session, useLocalSessions } from "./useGameSessionStorage";
+import React from "react";
+import { useLocalBoardGames } from "./useBoardGameStorage";
+import { useLocalSessions } from "./useGameSessionStorage";
 import { List } from "./components/List";
 
 interface SessionListProps {

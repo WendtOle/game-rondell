@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Game, GameDuration } from "./types";
+import { GameDuration } from "./types";
 import { useLocalBoardGames } from "./useBoardGameStorage";
 import { Heading } from "./components/Heading";
 import { Button } from "./components/Button";
