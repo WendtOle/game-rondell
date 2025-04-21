@@ -16,7 +16,7 @@ export const VoteList: React.FC<VoteListProps> = ({ votes }) => {
   }
 
   return (
-    <div className="container mx-auto p-4 max-w-md">
+    <div className="mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Abgegebene Stimmen</h2>
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <ul className="divide-y divide-gray-200">

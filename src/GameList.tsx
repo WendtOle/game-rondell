@@ -22,7 +22,7 @@ export const BoardGameList: React.FC<BoardGameListProps> = ({
   }
 
   return (
-    <div className="container mx-auto p-4 max-w-md">
+    <div className="mx-auto p-4">
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <ul className="divide-y divide-gray-200">
           {games.map((game) => (

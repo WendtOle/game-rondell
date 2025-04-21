@@ -65,7 +65,7 @@ export const ResultList: React.FC<ResultListProps> = ({ sessionId }) => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-md flex flex-col space-y-2">
+    <div className="mx-auto p-4 flex flex-col space-y-2">
       <h2 className="text-2xl font-bold mb-4">Ergebnisse</h2>
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <ul className="divide-y divide-gray-200">

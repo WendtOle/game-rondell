@@ -24,9 +24,8 @@ export const GameCreationForm = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-md">
+    <div className="mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Neues Brettspiel hinzufügen</h2>
-
       <form className="space-y-4">
         {/* Name (Pflichtfeld) */}
         <div>
