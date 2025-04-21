@@ -1,6 +1,6 @@
 // BoardGameList.tsx
 import React from "react";
-import { Session } from "./useGameSessionStorage";
+import { Session } from "./hooks/useGameSessionStorage";
 import { Heading } from "./components/Heading";
 import { List } from "./components/List";
 

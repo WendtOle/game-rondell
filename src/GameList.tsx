@@ -1,6 +1,6 @@
 // BoardGameList.tsx
 import React from "react";
-import { BoardGame } from "./useBoardGameStorage";
+import { BoardGame } from "./hooks/useBoardGameStorage";
 import { List } from "./components/List";
 
 interface BoardGameListProps {

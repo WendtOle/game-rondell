@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { GameDuration } from "./types";
-import { BoardGame } from "./useBoardGameStorage";
+import { BoardGame } from "./hooks/useBoardGameStorage";
 import { Heading } from "./components/Heading";
 import { Button } from "./components/Button";
 import { TextInput } from "./components/TextInput";

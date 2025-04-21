@@ -1,11 +1,11 @@
 import React from "react";
-import { useSessionId } from "./useSessionId";
+import { useSessionId } from "./hooks/useSessionId";
 import { VoteCreationForm } from "./VoteCreationForm";
 import { VoteList } from "./VoteList";
 import { ResultList } from "./ResultList";
 import { GameCreationForm } from "./GameCreationForm";
-import { useLocalBoardGames } from "./useBoardGameStorage";
-import { useLocalSessions } from "./useGameSessionStorage";
+import { useLocalBoardGames } from "./hooks/useBoardGameStorage";
+import { useLocalSessions } from "./hooks/useGameSessionStorage";
 
 export const SessionView = () => {
   const params = useSessionId();

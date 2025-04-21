@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useLocalBoardGames } from "./useBoardGameStorage";
-import { useLocalSessions } from "./useGameSessionStorage";
+import { useLocalBoardGames } from "./hooks/useBoardGameStorage";
+import { useLocalSessions } from "./hooks/useGameSessionStorage";
 import { Heading } from "./components/Heading";
 import { Button } from "./components/Button";
 import { TextInput } from "./components/TextInput";

@@ -1,6 +1,6 @@
 // useLocalBoardGames.ts
 import { useState, useEffect } from "react";
-import { GameDuration } from "./types";
+import { GameDuration } from "../types";
 
 export interface BoardGame {
   id: string; // Unique identifier
