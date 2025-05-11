@@ -11,7 +11,6 @@ export interface Session {
   id: string;
   name: string;
   createdAt: number;
-  gameIds: string[];
   votes: Vote[];
   finished: boolean;
 }
