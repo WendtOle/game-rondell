@@ -55,7 +55,6 @@ export const useLocalSessions = () => {
     };
     if (!getSessionById()) {
       return saveSession({
-        name: "new-sessions",
         votes: [fullVote],
         finished: false,
       });

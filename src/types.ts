@@ -9,7 +9,6 @@ export interface Vote {
 
 export interface Session {
   id: string;
-  name: string;
   createdAt: number;
   votes: Vote[];
   finished: boolean;
