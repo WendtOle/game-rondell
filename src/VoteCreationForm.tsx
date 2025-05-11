@@ -32,8 +32,8 @@ export const VoteCreationForm = () => {
     };
     setVotes((cur) => [...cur, newVote]);
     setParticipant("");
-    setBlocked(undefined);
-    setHero(undefined);
+    setBlocked("Bitte wählen");
+    setHero("Bitte wählen");
   };
 
   const isDisabled = () => {
@@ -66,7 +66,6 @@ export const VoteCreationForm = () => {
         <AddGamePopoverButton />
         <SingleSelect
           label="Bevorzugtes Spiel"
-          name="complexity"
           value={hero}
           onChange={(e) => setHero(e.target.value)}
           options={overallSelected()}
@@ -74,7 +73,6 @@ export const VoteCreationForm = () => {
         />
         <SingleSelect
           label="Absolutes No-Go-Spiel"
-          name="complexity"
           value={blocked}
           onChange={(e) => setBlocked(e.target.value)}
           options={overallSelected()}
