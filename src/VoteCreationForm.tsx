@@ -1,49 +1,46 @@
 import React, { useState } from "react";
 import { BoardGame } from "./hooks/useBoardGameStorage";
-import { Session, Vote } from "./types";
 import { Button } from "./components/Button";
 import { Heading } from "./components/Heading";
 import { TextInput } from "./components/TextInput";
 import { SingleSelect } from "./components/SingleSelect";
 import { MultiSelect } from "./components/MultiSelect";
 import { AddGamePopoverButton } from "./AddGamePopoverButton";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { nominatedGamesState, votesState } from "./state/sessions";
+import { generateId } from "./utils/generateId";
 
 interface VoteCreationFormProps {
-  sessionId?: string;
   games: BoardGame[];
   getGameById: (id: string) => BoardGame | undefined;
-  getPreviouslyNominatedGames: (sessionId?: string) => string[];
-  saveVote: (vote: Omit<Vote, "id" | "createdAt">) => Session;
-  setSession: (sessionId: string) => void;
   saveGame: (game: Omit<BoardGame, "id" | "createdAt">) => BoardGame;
 }
 
 export const VoteCreationForm = ({
-  sessionId,
   games,
   getGameById,
-  getPreviouslyNominatedGames,
-  saveVote,
-  setSession,
   saveGame,
 }: VoteCreationFormProps) => {
+  const setVotes = useSetRecoilState(votesState);
+  const nominatedGames = useRecoilValue(nominatedGamesState);
   const [participant, setParticipant] = useState("");
   const [blocked, setBlocked] = useState<string | undefined>();
   const [hero, setHero] = useState<string | undefined>(undefined);
 
   const [selected, setSelected] = useState<string[]>([]);
-  const overallSelected = () => [
-    ...new Set([...getPreviouslyNominatedGames(sessionId), ...selected]),
-  ];
+  const overallSelected = () => [...new Set([...nominatedGames, ...selected])];
 
   const onSave = () => {
-    const session = saveVote({
+    console.log("onSave");
+    const newVote = {
       participant,
       noGoGames: blocked,
       heroGames: hero,
       nominatedGames: overallSelected(),
-    });
-    setSession(session.id);
+      id: generateId(),
+      createdAt: Date.now(),
+    };
+    setVotes((cur) => [...cur, newVote]);
     setParticipant("");
     setBlocked(undefined);
     setHero(undefined);
@@ -74,7 +71,7 @@ export const VoteCreationForm = ({
           selected={overallSelected()}
           onChange={(selected) => setSelected(selected)}
           getOptionLabel={(id) => getGameById(id)?.name}
-          disabled={getPreviouslyNominatedGames(sessionId)}
+          disabled={nominatedGames}
         />
         <AddGamePopoverButton saveGame={saveGame} />
         <SingleSelect

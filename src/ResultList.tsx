@@ -1,27 +1,26 @@
 import React from "react";
 import { BoardGame } from "./hooks/useBoardGameStorage";
-import { Session, Vote } from "./types";
+import { Vote } from "./types";
 import { Button } from "./components/Button";
 import { List } from "./components/List";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  isValidSessionState,
+  nominatedGamesState,
+  sessionState,
+  votesState,
+} from "./state/sessions";
 
 interface ResultListProps {
-  nominatedGameIds: string[];
-  votes: Vote[];
-  session?: Session;
   getGameById: (id: string) => BoardGame | undefined;
-  isValidSession: () => { isValid: boolean; errorMessage?: string };
-  finishSession: () => void;
 }
 
-export const ResultList: React.FC<ResultListProps> = ({
-  votes,
-  nominatedGameIds,
-  getGameById,
-  session,
-  isValidSession,
-  finishSession,
-}) => {
-  const displayResults = session?.finished ?? false;
+export const ResultList: React.FC<ResultListProps> = ({ getGameById }) => {
+  const [session, setSession] = useRecoilState(sessionState);
+  const nominatedGameIds = useRecoilValue(nominatedGamesState);
+  const votes = useRecoilValue(votesState);
+  const isValidSession = useRecoilValue(isValidSessionState);
+  const displayResults = session?.finished;
 
   const result = votes.reduce(
     (acc, curr: Vote) => {
@@ -52,7 +51,7 @@ export const ResultList: React.FC<ResultListProps> = ({
     (left, right) => likabelityValue(right) - likabelityValue(left),
   );
 
-  const { isValid, errorMessage } = isValidSession();
+  const { isValid, errorMessage } = isValidSession;
 
   return (
     <div className="mx-auto p-4 flex flex-col space-y-2">
@@ -101,7 +100,11 @@ export const ResultList: React.FC<ResultListProps> = ({
         <Button
           disabled={!isValid}
           title="Session beenden und Ergebnisse anzeigen"
-          onClick={finishSession}
+          onClick={() =>
+            setSession((cur) =>
+              cur === undefined ? cur : { ...cur, finished: true },
+            )
+          }
         />
       )}
     </div>

@@ -1,29 +1,26 @@
 // BoardGameList.tsx
 import React from "react";
-import { Session } from "./types";
 import { Heading } from "./components/Heading";
 import { List } from "./components/List";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  nominatedGamesState,
+  sessionState,
+  votesState,
+} from "./state/sessions";
 
-interface VoteListProps {
-  getPreviouslyNominatedGames: (sessionId?: string) => string[];
-  getSessionById: (sessionId?: string) => Session | undefined;
-  onDelete: (voteId: string) => void;
-}
-
-export const VoteList: React.FC<VoteListProps> = ({
-  getPreviouslyNominatedGames,
-  getSessionById,
-  onDelete,
-}) => {
-  const votes = () => getSessionById()?.votes ?? [];
+export const VoteList: React.FC = () => {
+  const [votes, setVotes] = useRecoilState(votesState);
+  const session = useRecoilValue(sessionState);
+  const nominatedGames = useRecoilValue(nominatedGamesState);
   const nominatedGamesChangedSinceVote = (voteId: string) => {
-    const vote = votes().find(({ id }) => id === voteId);
+    const vote = votes.find(({ id }) => id === voteId);
     if (!vote) {
       return false;
     }
-    return vote.nominatedGames.length !== getPreviouslyNominatedGames().length;
+    return vote.nominatedGames.length !== nominatedGames.length;
   };
-  if (votes().length === 0) {
+  if (votes.length === 0) {
     return (
       <div className="p-4 text-center text-gray-500">
         <p>Keine Stimmem abgegeben vorhanden.</p>
@@ -31,14 +28,14 @@ export const VoteList: React.FC<VoteListProps> = ({
     );
   }
 
-  const finishedSession = getSessionById()?.finished;
+  const finishedSession = session?.finished;
 
   return (
     <div className="mx-auto p-4">
       <Heading title={finishedSession ? "Ergebnisse" : "Abgegebene Stimmen"} />
       {finishedSession && <h1>Stimmen von: </h1>}
       <List
-        items={votes()}
+        items={votes}
         getId={({ id }) => id}
         itemRenderer={(vote) => (
           <div className="flex justify-between items-center space-x-4 w-full">
@@ -52,7 +49,11 @@ export const VoteList: React.FC<VoteListProps> = ({
             </div>
             {nominatedGamesChangedSinceVote(vote.id) && (
               <button
-                onClick={() => onDelete(vote.id)}
+                onClick={() =>
+                  setVotes((curVotesState) =>
+                    curVotesState.filter((item) => item.id !== vote.id),
+                  )
+                }
                 className="text-2xl rounded-lg bg-red-600 text-white px-4 py-1"
               >
                 Löschen
