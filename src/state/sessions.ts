@@ -1,8 +1,4 @@
-import {
-  atom,
-  DefaultValue,
-  selector,
-} from "recoil";
+import { atom, DefaultValue, selector } from "recoil";
 import { localStorageEffect } from "./localStorageEffect";
 import { Session, Vote } from "../types";
 import { newSession } from "./sessionUtils";

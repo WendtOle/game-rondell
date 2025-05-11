@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { BoardGame } from "./hooks/useBoardGameStorage";
 import { Button } from "./components/Button";
 import { Heading } from "./components/Heading";
 import { TextInput } from "./components/TextInput";
@@ -9,18 +8,10 @@ import { AddGamePopoverButton } from "./AddGamePopoverButton";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { nominatedGamesState, votesState } from "./state/sessions";
 import { generateId } from "./utils/generateId";
+import { boardGamesState } from "./state/boardGames";
 
-interface VoteCreationFormProps {
-  games: BoardGame[];
-  getGameById: (id: string) => BoardGame | undefined;
-  saveGame: (game: Omit<BoardGame, "id" | "createdAt">) => BoardGame;
-}
-
-export const VoteCreationForm = ({
-  games,
-  getGameById,
-  saveGame,
-}: VoteCreationFormProps) => {
+export const VoteCreationForm = () => {
+  const games = useRecoilValue(boardGamesState);
   const setVotes = useSetRecoilState(votesState);
   const nominatedGames = useRecoilValue(nominatedGamesState);
   const [participant, setParticipant] = useState("");
@@ -31,7 +22,6 @@ export const VoteCreationForm = ({
   const overallSelected = () => [...new Set([...nominatedGames, ...selected])];
 
   const onSave = () => {
-    console.log("onSave");
     const newVote = {
       participant,
       noGoGames: blocked,
@@ -66,21 +56,21 @@ export const VoteCreationForm = ({
           onChange={(e) => setParticipant(e.target.value)}
         />
         <MultiSelect
-          options={games.map(({ id }) => id)}
+          options={Object.values(games).map(({ id }) => id)}
           label="Nominierte Spiele"
           selected={overallSelected()}
           onChange={(selected) => setSelected(selected)}
-          getOptionLabel={(id) => getGameById(id)?.name}
+          getOptionLabel={(id) => games[id]?.name}
           disabled={nominatedGames}
         />
-        <AddGamePopoverButton saveGame={saveGame} />
+        <AddGamePopoverButton />
         <SingleSelect
           label="Bevorzugtes Spiel"
           name="complexity"
           value={hero}
           onChange={(e) => setHero(e.target.value)}
           options={overallSelected()}
-          getOptionLabel={(id) => getGameById(id)?.name}
+          getOptionLabel={(id) => games[id]?.name}
         />
         <SingleSelect
           label="Absolutes No-Go-Spiel"
@@ -88,7 +78,7 @@ export const VoteCreationForm = ({
           value={blocked}
           onChange={(e) => setBlocked(e.target.value)}
           options={overallSelected()}
-          getOptionLabel={(id) => getGameById(id)?.name}
+          getOptionLabel={(id) => games[id]?.name}
         />
         <Button
           title="Stimme abgeben"

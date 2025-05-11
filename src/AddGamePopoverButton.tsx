@@ -3,13 +3,12 @@ import Modal from "react-modal";
 import { Button } from "./components/Button";
 import { Heading } from "./components/Heading";
 import { TextInput } from "./components/TextInput";
-import { BoardGame } from "./hooks/useBoardGameStorage";
+import { useSetRecoilState } from "recoil";
+import { boardGamesState } from "./state/boardGames";
+import { generateId } from "./utils/generateId";
 
-interface GameCreationFormProps {
-  saveGame: (game: Omit<BoardGame, "id" | "createdAt">) => BoardGame;
-}
-
-export const AddGamePopoverButton = ({ saveGame }: GameCreationFormProps) => {
+export const AddGamePopoverButton = () => {
+  const setBoardgames = useSetRecoilState(boardGamesState);
   const [modalIsOpen, setIsOpen] = useState(false);
   const customStyles = {
     content: {
@@ -25,8 +24,20 @@ export const AddGamePopoverButton = ({ saveGame }: GameCreationFormProps) => {
   const [name, setName] = useState("");
 
   const onSave = () => {
-    saveGame({
-      name,
+    setBoardgames((cur) => {
+      if (
+        Object.values(cur)
+          .map(({ name }) => name)
+          .includes(name)
+      ) {
+        return cur;
+      }
+      const game = {
+        id: generateId(),
+        name,
+        createdAt: Date.now(),
+      };
+      return { ...cur, [game.id]: game };
     });
     setName("");
   };

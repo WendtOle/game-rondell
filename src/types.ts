@@ -13,3 +13,9 @@ export interface Session {
   votes: Vote[];
   finished: boolean;
 }
+
+export interface BoardGame {
+  id: string;
+  createdAt: number;
+  name: string
+}

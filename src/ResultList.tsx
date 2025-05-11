@@ -1,5 +1,4 @@
 import React from "react";
-import { BoardGame } from "./hooks/useBoardGameStorage";
 import { Vote } from "./types";
 import { Button } from "./components/Button";
 import { List } from "./components/List";
@@ -10,12 +9,10 @@ import {
   sessionState,
   votesState,
 } from "./state/sessions";
+import { boardGamesState } from "./state/boardGames";
 
-interface ResultListProps {
-  getGameById: (id: string) => BoardGame | undefined;
-}
-
-export const ResultList: React.FC<ResultListProps> = ({ getGameById }) => {
+export const ResultList: React.FC = () => {
+  const boardGames = useRecoilValue(boardGamesState);
   const [session, setSession] = useRecoilState(sessionState);
   const nominatedGameIds = useRecoilValue(nominatedGamesState);
   const votes = useRecoilValue(votesState);
@@ -72,7 +69,7 @@ export const ResultList: React.FC<ResultListProps> = ({ getGameById }) => {
                   <h3
                     className={`text-3xl text-gray-800 ${isNoGo && "line-through"}`}
                   >
-                    {getGameById(id)?.name}
+                    {boardGames[id]?.name}
                   </h3>
                   {displayResults && (
                     <div className="flex mt-1">
