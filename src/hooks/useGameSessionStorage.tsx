@@ -154,7 +154,10 @@ export const useLocalSessions = () => {
 
   const isValidSession = (): { isValid: boolean; errorMessage?: string } => {
     const session = getSessionById();
-    if (!session || session.votes.length < 2) {
+    if (!session) {
+      return { isValid: false };
+    }
+    if (session.votes.length < 2) {
       return {
         isValid: false,
         errorMessage: "Es sollten mindestens zwei Stimmen abgegeben werden!",

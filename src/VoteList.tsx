@@ -31,9 +31,12 @@ export const VoteList: React.FC<VoteListProps> = ({
     );
   }
 
+  const finishedSession = getSessionById()?.finished;
+
   return (
     <div className="mx-auto p-4">
-      <Heading title="Abgegebene Stimmen" />
+      <Heading title={finishedSession ? "Ergebnisse" : "Abgegebene Stimmen"} />
+      {finishedSession && <h1>Stimmen von: </h1>}
       <List
         items={votes()}
         getId={({ id }) => id}
