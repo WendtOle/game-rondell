@@ -3,7 +3,6 @@ import { useSessionId } from "./hooks/useSessionId";
 import { VoteCreationForm } from "./VoteCreationForm";
 import { VoteList } from "./VoteList";
 import { ResultList } from "./ResultList";
-import { GameCreationForm } from "./GameCreationForm";
 import { useLocalBoardGames } from "./hooks/useBoardGameStorage";
 import { useLocalSessions } from "./hooks/useGameSessionStorage";
 import { SessionList } from "./SessionList";
@@ -29,6 +28,7 @@ export const SessionView = () => {
         getPreviouslyNominatedGames={getPreviouslyNominatedGames}
         saveVote={saveVote}
         setSession={onSelectSessions}
+        saveGame={saveGame}
       />
       <VoteList
         getPreviouslyNominatedGames={getPreviouslyNominatedGames}
@@ -40,7 +40,6 @@ export const SessionView = () => {
         getGameById={getGameById}
         nominatedGameIds={getPreviouslyNominatedGames()}
       />
-      <GameCreationForm saveGame={saveGame} />
       <SessionList
         sessions={sessionSummaryList}
         onClickSession={onSelectSessions}

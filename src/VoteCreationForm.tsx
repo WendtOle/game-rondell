@@ -6,6 +6,7 @@ import { Heading } from "./components/Heading";
 import { TextInput } from "./components/TextInput";
 import { SingleSelect } from "./components/SingleSelect";
 import { MultiSelect } from "./components/MultiSelect";
+import { AddGamePopoverButton } from "./AddGamePopoverButton";
 
 interface VoteCreationFormProps {
   sessionId?: string;
@@ -14,6 +15,7 @@ interface VoteCreationFormProps {
   getPreviouslyNominatedGames: (sessionId?: string) => string[];
   saveVote: (vote: Omit<Vote, "id" | "createdAt">) => Session;
   setSession: (sessionId: string) => void;
+  saveGame: (game: Omit<BoardGame, "id" | "createdAt">) => BoardGame;
 }
 
 export const VoteCreationForm = ({
@@ -23,6 +25,7 @@ export const VoteCreationForm = ({
   getPreviouslyNominatedGames,
   saveVote,
   setSession,
+  saveGame,
 }: VoteCreationFormProps) => {
   const [participant, setParticipant] = useState("");
   const [blocked, setBlocked] = useState<string | undefined>();
@@ -41,7 +44,8 @@ export const VoteCreationForm = ({
       nominatedGames: overallSelected(),
     });
     setSession(session.id);
-    setParticipant(""), setBlocked(undefined);
+    setParticipant("");
+    setBlocked(undefined);
     setHero(undefined);
   };
 
@@ -72,6 +76,7 @@ export const VoteCreationForm = ({
           getOptionLabel={(id) => getGameById(id)?.name}
           disabled={getPreviouslyNominatedGames(sessionId)}
         />
+        <AddGamePopoverButton saveGame={saveGame} />
         <SingleSelect
           label="Bevorzugtes Spiel"
           name="complexity"
