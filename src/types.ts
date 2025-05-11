@@ -13,4 +13,5 @@ export interface Session {
   createdAt: number;
   gameIds: string[];
   votes: Vote[];
+  finished: boolean;
 }

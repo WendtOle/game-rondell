@@ -57,6 +57,7 @@ export const useLocalSessions = () => {
         name: "new-sessions",
         votes: [fullVote],
         gameIds: [],
+        finished: false,
       });
     }
     const session = getSessionById();
@@ -82,7 +83,14 @@ export const useLocalSessions = () => {
     };
     updateSession(updatedSession);
     return updatedSession;
-    //TODO
+  };
+
+  const finishSession = () => {
+    const session = getSessionById();
+    if (!session) {
+      return;
+    }
+    updateSession({ ...session, finished: true });
   };
 
   const getPreviouslyNominatedGames = (): string[] => {
@@ -131,13 +139,49 @@ export const useLocalSessions = () => {
     }
   };
 
-  const getSessionById = (): Session | undefined => {
-    return sessions.find((game) => game.id === sessionId);
+  const getSessionById = (): Session | undefined =>
+    sessions.find(({ id }) => id === sessionId);
+
+  const nominatedGamesChangedSinceVote = (voteId: string) => {
+    const vote = (getSessionById()?.votes ?? []).find(
+      ({ id }) => id === voteId,
+    );
+    if (!vote) {
+      return false;
+    }
+    return vote.nominatedGames.length !== getPreviouslyNominatedGames().length;
+  };
+
+  const isValidSession = (): { isValid: boolean; errorMessage?: string } => {
+    const session = getSessionById();
+    if (!session || session.votes.length < 2) {
+      return {
+        isValid: false,
+        errorMessage: "Es sollten mindestens zwei Stimmen abgegeben werden!",
+      };
+    }
+    if (session.votes.some((vote) => nominatedGamesChangedSinceVote(vote.id))) {
+      return {
+        isValid: false,
+        errorMessage: "Stimmen müssen geupdated werden!",
+      };
+    }
+    return { isValid: true };
   };
 
   const sessionSummaryList = sessions.map((session) => ({
     id: session.id,
-    summary: `Session - ${new Date(session.createdAt).toLocaleString()}`,
+    summary: `Session - ${new Date(session.createdAt).toLocaleString(
+      undefined,
+      {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: false,
+      },
+    )} ${session.finished ? "- abgeschlossen" : "- offen"}`,
   }));
 
   /**
@@ -159,5 +203,7 @@ export const useLocalSessions = () => {
     getPreviouslyNominatedGames,
     sessionSummaryList,
     removeVote,
+    isValidSession,
+    finishSession,
   };
 };

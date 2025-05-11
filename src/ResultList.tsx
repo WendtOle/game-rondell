@@ -1,22 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import { BoardGame } from "./hooks/useBoardGameStorage";
-import { Vote } from "./types";
+import { Session, Vote } from "./types";
 import { Button } from "./components/Button";
-import { Heading } from "./components/Heading";
 import { List } from "./components/List";
 
 interface ResultListProps {
   nominatedGameIds: string[];
   votes: Vote[];
+  session?: Session;
   getGameById: (id: string) => BoardGame | undefined;
+  isValidSession: () => { isValid: boolean; errorMessage?: string };
+  finishSession: () => void;
 }
 
 export const ResultList: React.FC<ResultListProps> = ({
   votes,
   nominatedGameIds,
   getGameById,
+  session,
+  isValidSession,
+  finishSession,
 }) => {
-  const [displayResults, setDisplayResults] = useState(false);
+  const displayResults = session?.finished ?? false;
 
   const result = votes.reduce(
     (acc, curr: Vote) => {
@@ -47,9 +52,10 @@ export const ResultList: React.FC<ResultListProps> = ({
     (left, right) => likabelityValue(right) - likabelityValue(left),
   );
 
+  const { isValid, errorMessage } = isValidSession();
+
   return (
     <div className="mx-auto p-4 flex flex-col space-y-2">
-      <Heading title="Ergebnisse" />
       {displayResults && (
         <List
           items={sortedGameIds}
@@ -85,10 +91,16 @@ export const ResultList: React.FC<ResultListProps> = ({
           }}
         />
       )}
-      <Button
-        title="Ergebnis anzeigen"
-        onClick={() => setDisplayResults((cur) => !cur)}
-      />
+      {errorMessage && (
+        <h2 className="text-2xl text-red-400">{errorMessage}</h2>
+      )}
+      {!displayResults && (
+        <Button
+          disabled={!isValid}
+          title="Session beenden und Ergebnisse anzeigen"
+          onClick={finishSession}
+        />
+      )}
     </div>
   );
 };
