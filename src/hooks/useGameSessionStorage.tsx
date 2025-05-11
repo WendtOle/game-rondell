@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSessionId } from "./useSessionId";
 import { Session, Vote } from "../types";
+import { generateId } from "../utils/generateId";
 
 const STORAGE_KEY = "sessions";
 
@@ -186,14 +187,6 @@ export const useLocalSessions = () => {
       },
     )} ${session.finished ? "- abgeschlossen" : "- offen"}`,
   }));
-
-  /**
-   * Generiert eine eindeutige ID
-   * @returns Eindeutige ID als String
-   */
-  const generateId = (): string => {
-    return Date.now().toString(36) + Math.random().toString(36).substring(2);
-  };
 
   return {
     sessions,
