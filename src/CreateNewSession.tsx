@@ -1,6 +1,10 @@
 import React from "react";
-import { useSetRecoilState } from "recoil";
-import { sessionsState, activeSessionIdState } from "./state/sessions";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  sessionsState,
+  activeSessionIdState,
+  sessionState,
+} from "./state/sessions";
 import { generateId } from "./utils/generateId";
 import { Session } from "./types";
 import { Button } from "./components/Button";
@@ -8,6 +12,13 @@ import { Button } from "./components/Button";
 export const CreateNewSessionButton = () => {
   const setSessionId = useSetRecoilState(activeSessionIdState);
   const setSessions = useSetRecoilState(sessionsState);
+  const session = useRecoilValue(sessionState);
+
+  const isSessionFinished = session?.finished;
+
+  if (!isSessionFinished) {
+    return null;
+  }
 
   const handleClick = () => {
     const newSession: Session = {
