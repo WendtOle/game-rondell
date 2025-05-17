@@ -11,6 +11,7 @@ import {
 import { generateId } from "./utils/generateId";
 import { Session } from "./types";
 import { Button } from "./components/Button";
+import { FinishSessionButton } from "./FinishSessionButton";
 
 export const App = () => {
   const session = useRecoilValue(sessionState);
@@ -33,6 +34,7 @@ export const App = () => {
       {!session?.finished && <VoteCreationForm />}
       <VoteList />
       <ResultList />
+      <FinishSessionButton />
       <Button title="Neue Abstimmung starten" onClick={handleClick} />
     </div>
   );

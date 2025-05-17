@@ -1,8 +1,7 @@
 import React from "react";
 import { Vote } from "./types";
-import { Button } from "./components/Button";
 import { List } from "./components/List";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import {
   isValidSessionState,
   nominatedGamesState,
@@ -13,7 +12,7 @@ import { boardGamesState } from "./state/boardGames";
 
 export const ResultList: React.FC = () => {
   const boardGames = useRecoilValue(boardGamesState);
-  const [session, setSession] = useRecoilState(sessionState);
+  const session = useRecoilValue(sessionState);
   const nominatedGameIds = useRecoilValue(nominatedGamesState);
   const votes = useRecoilValue(votesState);
   const isValidSession = useRecoilValue(isValidSessionState);
@@ -89,20 +88,6 @@ export const ResultList: React.FC = () => {
             }}
           />
         </div>
-      )}
-      {errorMessage && (
-        <h2 className="text-2xl text-red-400">{errorMessage}</h2>
-      )}
-      {!displayResults && (
-        <Button
-          disabled={!isValid}
-          title="Session beenden und Ergebnisse anzeigen"
-          onClick={() =>
-            setSession((cur) =>
-              cur === undefined ? cur : { ...cur, finished: true },
-            )
-          }
-        />
       )}
     </div>
   );
