@@ -9,6 +9,7 @@ import {
   votesState,
 } from "./state/sessions";
 import { boardGamesState } from "./state/boardGames";
+import { SimpleList } from "./components/SimpleList";
 
 export const ResultList: React.FC = () => {
   const boardGames = useRecoilValue(boardGamesState);
@@ -55,6 +56,13 @@ export const ResultList: React.FC = () => {
 
   return (
     <div className="mx-auto p-4 flex flex-col space-y-2">
+      <SimpleList
+        label="Es haben folgende Personen abgestimmt:"
+        items={votes.map(({ participant, id }) => ({
+          label: participant,
+          id,
+        }))}
+      />
       <div>
         <h2 className="text-3xl">Abstimmungsergebnisse: </h2>
         <List
