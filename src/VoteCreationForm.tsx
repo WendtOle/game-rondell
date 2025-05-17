@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import { Button } from "./components/Button";
-import { Heading } from "./components/Heading";
 import { TextInput } from "./components/TextInput";
 import { SingleSelect } from "./components/SingleSelect";
 import { MultiSelect } from "./components/MultiSelect";
 import { AddGamePopoverButton } from "./AddGamePopoverButton";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { nominatedGamesState, votesState } from "./state/sessions";
 import { generateId } from "./utils/generateId";
 import { boardGamesState } from "./state/boardGames";
 import { SimpleList } from "./components/SimpleList";
+import { voteParticipantNameState } from "./state/voteName";
 
 export const VoteCreationForm = () => {
   const games = useRecoilValue(boardGamesState);
   const setVotes = useSetRecoilState(votesState);
   const nominatedGames = useRecoilValue(nominatedGamesState);
-  const [participant, setParticipant] = useState("");
+  const [participant, setParticipant] = useRecoilState(
+    voteParticipantNameState,
+  );
   const [blocked, setBlocked] = useState<string | undefined>();
   const [hero, setHero] = useState<string | undefined>(undefined);
 
@@ -24,7 +26,7 @@ export const VoteCreationForm = () => {
 
   const onSave = () => {
     const newVote = {
-      participant,
+      participant: participant ?? "",
       noGoGames: blocked,
       heroGames: hero,
       nominatedGames: overallSelected(),

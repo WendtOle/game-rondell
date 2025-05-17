@@ -1,17 +1,21 @@
 // BoardGameList.tsx
 import React from "react";
 import { List } from "./components/List";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   nominatedGamesState,
   sessionState,
   votesState,
 } from "./state/sessions";
+import { Vote } from "./types";
+import { voteParticipantNameState } from "./state/voteName";
 
 export const VoteList: React.FC = () => {
   const [votes, setVotes] = useRecoilState(votesState);
   const session = useRecoilValue(sessionState);
   const nominatedGames = useRecoilValue(nominatedGamesState);
+  const setNewVoteParticipantName = useSetRecoilState(voteParticipantNameState);
+
   const nominatedGamesChangedSinceVote = (voteId: string) => {
     const vote = votes.find(({ id }) => id === voteId);
     if (!vote) {
@@ -19,6 +23,14 @@ export const VoteList: React.FC = () => {
     }
     return vote.nominatedGames.length !== nominatedGames.length;
   };
+
+  const handleVoteUpdateClick = (vote: Vote) => {
+    setVotes((curVotesState) =>
+      curVotesState.filter((item) => item.id !== vote.id),
+    );
+    setNewVoteParticipantName(vote.participant);
+  };
+
   if (votes.length === 0 || session?.finished) {
     return null;
   }
@@ -34,11 +46,7 @@ export const VoteList: React.FC = () => {
             <h3 className="text-3xl text-gray-800">{vote.participant}</h3>
             {nominatedGamesChangedSinceVote(vote.id) && (
               <button
-                onClick={() =>
-                  setVotes((curVotesState) =>
-                    curVotesState.filter((item) => item.id !== vote.id),
-                  )
-                }
+                onClick={() => handleVoteUpdateClick(vote)}
                 className="cursor-pointer text-2xl rounded-lg bg-red-600 text-white px-4 py-1"
               >
                 Stimme aktualisieren
