@@ -40,6 +40,7 @@ export const AddGamePopoverButton = () => {
       return { ...cur, [game.id]: game };
     });
     setName("");
+    setIsOpen(false);
   };
 
   return (
