@@ -17,11 +17,11 @@ export const SingleSelect = ({
   ...props
 }: SingleSelectProps) => {
   return (
-    <label className="block text-3xl">
+    <label className="block text-2xl">
       {label}
       <select
         {...props}
-        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+        className="mt-1 block text-xl w-full p-2 border border-gray-300 rounded-md"
       >
         <option value="">Bitte wählen</option>
         {options.map((option) => (
