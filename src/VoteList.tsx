@@ -37,17 +37,17 @@ export const VoteList: React.FC = () => {
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <h1 className="text-3xl">Abgegebene Stimmen</h1>
+      <h1 className="text-2xl">Abgegebene Stimmen</h1>
       <List
         items={votes}
         getId={({ id }) => id}
         itemRenderer={(vote) => (
           <div className="flex justify-between items-center space-x-4 w-full">
-            <h3 className="text-3xl text-gray-800">{vote.participant}</h3>
+            <h3 className="text-xl text-gray-800">{vote.participant}</h3>
             {nominatedGamesChangedSinceVote(vote.id) && (
               <button
                 onClick={() => handleVoteUpdateClick(vote)}
-                className="cursor-pointer text-2xl rounded-lg bg-red-600 text-white px-4 py-1"
+                className="cursor-pointer text-1xl rounded-lg bg-red-600 text-white px-4 py-1"
               >
                 Stimme aktualisieren
               </button>

@@ -1,5 +1,5 @@
 import React from "react";
 
 export const Heading = ({ title }: { title: string }) => {
-  return <h2 className="text-5xl mb-4">{title}</h2>;
+  return <h2 className="text-3xl mb-4">{title}</h2>;
 };

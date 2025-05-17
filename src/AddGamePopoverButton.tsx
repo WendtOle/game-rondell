@@ -58,7 +58,7 @@ export const AddGamePopoverButton = () => {
         style={customStyles}
       >
         <div className="mx-auto p-4">
-          <Heading title="Neues Brettspiel hinzufügen" />
+          <Heading title="Brettspiel hinzufügen" />
           <div className="space-y-4">
             <TextInput
               label="Name*"

@@ -19,7 +19,7 @@ export const List = <T,>({
         {items.map((item) => (
           <li
             key={getId(item)}
-            className={`p-4 transition-colors ${
+            className={`p-2 transition-colors ${
               isSelected?.(item)
                 ? "bg-blue-50 border-l-4 border-blue-500"
                 : "hover:bg-gray-100 border-l-4 border-transparent"

@@ -28,8 +28,8 @@ export const MultiSelect = ({
   };
   return (
     <div>
-      <p className="block text-3xl mb-2">{label}</p>
-      <div className="grid grid-cols-2 gap-2 my-4">
+      <p className="block text-2xl mb-2">{label}</p>
+      <div className="grid grid-cols-2 gap-1 my-4">
         {options.map((option) => (
           <label key={option} className="flex items-center ">
             <input
@@ -40,7 +40,7 @@ export const MultiSelect = ({
               className="mr-4"
               disabled={disabled?.includes(option)}
             />
-            <span className="text-2xl italic">
+            <span className="text-xl italic">
               {getOptionLabel ? getOptionLabel(option) : option}
             </span>
           </label>

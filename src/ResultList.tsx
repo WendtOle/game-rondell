@@ -64,7 +64,7 @@ export const ResultList: React.FC = () => {
         }))}
       />
       <div>
-        <h2 className="text-3xl">Abstimmungsergebnisse: </h2>
+        <h2 className="text-2xl">Abstimmungsergebnisse: </h2>
         <List
           items={sortedGameIds}
           getId={(id) => id}
@@ -77,7 +77,7 @@ export const ResultList: React.FC = () => {
             return (
               <div className="flex flex-row space-x-2">
                 <h3
-                  className={`text-3xl text-gray-800 ${isNoGo && "line-through"}`}
+                  className={`text-xl text-gray-800 ${isNoGo && "line-through"}`}
                 >
                   {boardGames[id]?.name}
                 </h3>
