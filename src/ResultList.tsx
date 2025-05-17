@@ -18,6 +18,10 @@ export const ResultList: React.FC = () => {
   const isValidSession = useRecoilValue(isValidSessionState);
   const displayResults = session?.finished;
 
+  if (!displayResults) {
+    return null;
+  }
+
   const result = votes.reduce(
     (acc, curr: Vote) => {
       const { noGoGames, heroGames } = curr;
@@ -51,44 +55,42 @@ export const ResultList: React.FC = () => {
 
   return (
     <div className="mx-auto p-4 flex flex-col space-y-2">
-      {displayResults && (
-        <div>
-          <h1>Abstimmungsergbenissen: </h1>
-          <List
-            items={sortedGameIds}
-            getId={(id) => id}
-            itemRenderer={(id) => {
-              if (!displayResults) {
-                return <></>;
-              }
-              const isNoGo = result.noGo.includes(id);
-              const amountOfStars = !isNoGo ? result.favoured[id] || 0 : 0;
-              return (
-                <div className="flex flex-row space-x-2">
-                  <h3
-                    className={`text-3xl text-gray-800 ${isNoGo && "line-through"}`}
-                  >
-                    {boardGames[id]?.name}
-                  </h3>
-                  {displayResults && (
-                    <div className="flex mt-1">
-                      {[...Array(amountOfStars)].map((_, i) => (
-                        <svg
-                          key={i}
-                          className="w-4 h-4 text-yellow-500 fill-current"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                        </svg>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            }}
-          />
-        </div>
-      )}
+      <div>
+        <h2 className="text-3xl">Abstimmungsergebnisse: </h2>
+        <List
+          items={sortedGameIds}
+          getId={(id) => id}
+          itemRenderer={(id) => {
+            if (!displayResults) {
+              return <></>;
+            }
+            const isNoGo = result.noGo.includes(id);
+            const amountOfStars = !isNoGo ? result.favoured[id] || 0 : 0;
+            return (
+              <div className="flex flex-row space-x-2">
+                <h3
+                  className={`text-3xl text-gray-800 ${isNoGo && "line-through"}`}
+                >
+                  {boardGames[id]?.name}
+                </h3>
+                {displayResults && (
+                  <div className="flex mt-1">
+                    {[...Array(amountOfStars)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className="w-4 h-4 text-yellow-500 fill-current"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                      </svg>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          }}
+        />
+      </div>
     </div>
   );
 };
