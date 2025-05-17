@@ -55,9 +55,9 @@ export const ResultList: React.FC = () => {
   const { isValid, errorMessage } = isValidSession;
 
   return (
-    <div className="mx-auto p-4 flex flex-col space-y-2">
+    <div className="flex gap-y-4 flex-col bg-white shadow-md p-6 rounded-lg">
       <SimpleList
-        label="Es haben folgende Personen abgestimmt:"
+        label="Stimmen von: "
         items={votes.map(({ participant, id }) => ({
           label: participant,
           id,

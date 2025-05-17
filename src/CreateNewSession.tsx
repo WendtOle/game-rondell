@@ -31,5 +31,9 @@ export const CreateNewSessionButton = () => {
     setSessionId(newSession.id);
     return;
   };
-  return <Button title="Neue Abstimmung starten" onClick={handleClick} />;
+  return (
+    <div className="w-full flex justify-center">
+      <Button title="Neue Abstimmung starten" onClick={handleClick} />
+    </div>
+  );
 };

@@ -16,12 +16,12 @@ export const List = <T,>({
   onClick,
 }: ListProps<T>) => {
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <ul className="divide-y divide-gray-200">
         {items.map((item) => (
           <li
             key={getId(item)}
-            className={`p-4 transition-colors cursor-pointer ${
+            className={`p-4 transition-colors cursor-pointer border-solid ${
               isSelected?.(item)
                 ? "bg-blue-50 border-l-4 border-blue-500"
                 : "hover:bg-gray-50 border-l-4 border-transparent"

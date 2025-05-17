@@ -8,24 +8,23 @@ export const FinishSessionButton = () => {
   const isValidSession = useRecoilValue(isValidSessionState);
   const displayResults = session?.finished;
 
-  const { isValid, errorMessage } = isValidSession;
+  const { isValid } = isValidSession;
+
+  if (displayResults) {
+    return null;
+  }
 
   return (
-    <div className="mb-4">
-      {errorMessage && (
-        <h2 className="text-2xl text-red-400">{errorMessage}</h2>
-      )}
-      {!displayResults && (
-        <Button
-          disabled={!isValid}
-          title="Session beenden und Ergebnisse anzeigen"
-          onClick={() =>
-            setSession((cur) =>
-              cur === undefined ? cur : { ...cur, finished: true },
-            )
-          }
-        />
-      )}
+    <div className="w-full flex justify-center">
+      <Button
+        disabled={!isValid}
+        title="Abstimmung beenden"
+        onClick={() =>
+          setSession((cur) =>
+            cur === undefined ? cur : { ...cur, finished: true },
+          )
+        }
+      />
     </div>
   );
 };

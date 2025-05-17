@@ -11,12 +11,18 @@ export const App = () => {
   const session = useRecoilValue(sessionState);
 
   return (
-    <div className="mx-auto p-4 w-4xl">
-      {!session?.finished && <VoteCreationForm />}
-      <VoteList />
-      <ResultList />
-      <FinishSessionButton />
-      <CreateNewSessionButton />
+    <div className="bg-gray-50 min-h-screen">
+      <div className="mx-auto p-12 flex flex-col gap-y-4">
+        {!session?.finished && <VoteCreationForm />}
+        {!session?.finished && (session?.votes.length ?? 0) > 0 && (
+          <div className="flex gap-y-4 flex-col bg-white shadow-md p-6 rounded-lg">
+            <VoteList />
+            <FinishSessionButton />
+          </div>
+        )}
+        <ResultList />
+        <CreateNewSessionButton />
+      </div>
     </div>
   );
 };

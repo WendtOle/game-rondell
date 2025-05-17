@@ -45,48 +45,47 @@ export const VoteCreationForm = () => {
   };
 
   return (
-    <div className="mx-auto p-4">
-      <Heading title="Neue Stimme abgeben" />
-      <div className="space-y-4">
-        <TextInput
-          label="Name"
-          required
-          type="text"
-          name="name"
-          value={participant}
-          onChange={(e) => setParticipant(e.target.value)}
+    <div className="flex gap-y-4 flex-col bg-white shadow-md p-6 rounded-lg">
+      <TextInput
+        label="Name"
+        required
+        type="text"
+        name="name"
+        value={participant}
+        onChange={(e) => setParticipant(e.target.value)}
+      />
+      {nominatedGames.length > 0 && (
+        <SimpleList
+          label="Nominierte Spiele"
+          items={nominatedGames.map((id) => ({ id, label: games[id]?.name }))}
         />
-        {nominatedGames.length > 0 && (
-          <SimpleList
-            label="Bereits nominierte Spiele"
-            items={nominatedGames.map((id) => ({ id, label: games[id]?.name }))}
-          />
-        )}
-        <MultiSelect
-          options={Object.values(games)
-            .map(({ id }) => id)
-            .filter((id) => !nominatedGames.includes(id))}
-          label="Weitere Spiele nominieren"
-          selected={overallSelected()}
-          onChange={(selected) => setSelected(selected)}
-          getOptionLabel={(id) => games[id]?.name}
-          disabled={nominatedGames}
-        />
-        <AddGamePopoverButton />
-        <SingleSelect
-          label="Bevorzugtes Spiel"
-          value={hero}
-          onChange={(e) => setHero(e.target.value)}
-          options={overallSelected()}
-          getOptionLabel={(id) => games[id]?.name}
-        />
-        <SingleSelect
-          label="Absolutes No-Go-Spiel"
-          value={blocked}
-          onChange={(e) => setBlocked(e.target.value)}
-          options={overallSelected()}
-          getOptionLabel={(id) => games[id]?.name}
-        />
+      )}
+      <MultiSelect
+        options={Object.values(games)
+          .map(({ id }) => id)
+          .filter((id) => !nominatedGames.includes(id))}
+        label={`${nominatedGames.length > 0 ? "Weitere " : ""}Spiele nominieren`}
+        selected={overallSelected()}
+        onChange={(selected) => setSelected(selected)}
+        getOptionLabel={(id) => games[id]?.name}
+        disabled={nominatedGames}
+      />
+      <AddGamePopoverButton />
+      <SingleSelect
+        label="Bevorzugtes Spiel"
+        value={hero}
+        onChange={(e) => setHero(e.target.value)}
+        options={overallSelected()}
+        getOptionLabel={(id) => games[id]?.name}
+      />
+      <SingleSelect
+        label="Absolutes No-Go-Spiel"
+        value={blocked}
+        onChange={(e) => setBlocked(e.target.value)}
+        options={overallSelected()}
+        getOptionLabel={(id) => games[id]?.name}
+      />
+      <div className="w-full flex flex-col items-center">
         <Button
           title="Stimme abgeben"
           onClick={onSave}
