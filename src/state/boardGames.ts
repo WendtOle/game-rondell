@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { BoardGame } from "../hooks/useBoardGameStorage";
+import { BoardGame } from "../types";
 import { localStorageEffect } from "./localStorageEffect";
 
 const BOARD_GAME_STATE_KEY = "board-games";
