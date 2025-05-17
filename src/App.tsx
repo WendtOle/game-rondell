@@ -1,11 +1,19 @@
 import React from "react";
-import { SessionView } from "./SessionView";
-import { RecoilRoot } from "recoil";
+import { VoteCreationForm } from "./VoteCreationForm";
+import { VoteList } from "./VoteList";
+import { ResultList } from "./ResultList";
+import { SessionList } from "./SessionList";
+import { useRecoilValue } from "recoil";
+import { sessionState } from "./state/sessions";
 
 export const App = () => {
+  const session = useRecoilValue(sessionState);
   return (
-    <RecoilRoot>
-      <SessionView />
-    </RecoilRoot>
+    <div className="mx-auto p-4 w-4xl">
+      {!session?.finished && <VoteCreationForm />}
+      <VoteList />
+      <ResultList />
+      <SessionList />
+    </div>
   );
 };
