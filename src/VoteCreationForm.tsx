@@ -9,6 +9,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { nominatedGamesState, votesState } from "./state/sessions";
 import { generateId } from "./utils/generateId";
 import { boardGamesState } from "./state/boardGames";
+import { SimpleList } from "./components/SimpleList";
 
 export const VoteCreationForm = () => {
   const games = useRecoilValue(boardGamesState);
@@ -55,14 +56,12 @@ export const VoteCreationForm = () => {
           value={participant}
           onChange={(e) => setParticipant(e.target.value)}
         />
-        <div>
-          <h3 className="block text-3xl mb-2">Bereits nominierte Spiele</h3>
-          <ul>
-            {nominatedGames.map((game) => (
-              <li>{games[game]?.name}</li>
-            ))}
-          </ul>
-        </div>
+        {nominatedGames.length > 0 && (
+          <SimpleList
+            label="Bereits nominierte Spiele"
+            items={nominatedGames.map((id) => ({ id, label: games[id]?.name }))}
+          />
+        )}
         <MultiSelect
           options={Object.values(games)
             .map(({ id }) => id)

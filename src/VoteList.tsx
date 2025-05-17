@@ -8,6 +8,7 @@ import {
   sessionState,
   votesState,
 } from "./state/sessions";
+import { SimpleList } from "./components/SimpleList";
 
 export const VoteList: React.FC = () => {
   const [votes, setVotes] = useRecoilState(votesState);
@@ -33,35 +34,44 @@ export const VoteList: React.FC = () => {
   return (
     <div className="mx-auto p-4">
       <Heading title={finishedSession ? "Ergebnisse" : "Abgegebene Stimmen"} />
-      {finishedSession && <h1>Stimmen von: </h1>}
-      <List
-        items={votes}
-        getId={({ id }) => id}
-        itemRenderer={(vote) => (
-          <div className="flex justify-between items-center space-x-4 w-full">
-            <div>
-              <h3 className="text-3xl text-gray-800">{vote.participant}</h3>
+      {finishedSession ? (
+        <SimpleList
+          label="Es haben folgende Personen abgestimmt:"
+          items={votes.map(({ participant, id }) => ({
+            label: participant,
+            id,
+          }))}
+        />
+      ) : (
+        <List
+          items={votes}
+          getId={({ id }) => id}
+          itemRenderer={(vote) => (
+            <div className="flex justify-between items-center space-x-4 w-full">
+              <div>
+                <h3 className="text-3xl text-gray-800">{vote.participant}</h3>
+                {nominatedGamesChangedSinceVote(vote.id) && (
+                  <h2 className="text-2xl text-red-400">
+                    Nominated games changed!
+                  </h2>
+                )}
+              </div>
               {nominatedGamesChangedSinceVote(vote.id) && (
-                <h2 className="text-2xl text-red-400">
-                  Nominated games changed!
-                </h2>
+                <button
+                  onClick={() =>
+                    setVotes((curVotesState) =>
+                      curVotesState.filter((item) => item.id !== vote.id),
+                    )
+                  }
+                  className="text-2xl rounded-lg bg-red-600 text-white px-4 py-1"
+                >
+                  Löschen
+                </button>
               )}
             </div>
-            {nominatedGamesChangedSinceVote(vote.id) && (
-              <button
-                onClick={() =>
-                  setVotes((curVotesState) =>
-                    curVotesState.filter((item) => item.id !== vote.id),
-                  )
-                }
-                className="text-2xl rounded-lg bg-red-600 text-white px-4 py-1"
-              >
-                Löschen
-              </button>
-            )}
-          </div>
-        )}
-      />
+          )}
+        />
+      )}
     </div>
   );
 };
