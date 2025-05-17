@@ -39,7 +39,7 @@ export const VoteList: React.FC = () => {
                     curVotesState.filter((item) => item.id !== vote.id),
                   )
                 }
-                className="text-2xl rounded-lg bg-red-600 text-white px-4 py-1"
+                className="cursor-pointer text-2xl rounded-lg bg-red-600 text-white px-4 py-1"
               >
                 Stimme aktualisieren
               </button>
