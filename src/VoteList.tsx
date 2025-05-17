@@ -23,7 +23,7 @@ export const VoteList: React.FC = () => {
   if (votes.length === 0) {
     return (
       <div className="p-4 text-center text-gray-500">
-        <p>Keine Stimmem abgegeben vorhanden.</p>
+        <p>Keine abgegebenen Stimmen vorhanden.</p>
       </div>
     );
   }
