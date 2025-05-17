@@ -53,9 +53,9 @@ export const ResultList: React.FC = () => {
     (id) => !noGo.includes(id) && !Object.keys(favoured).includes(id),
   );
 
-  const sortedGameIds = [...Object.keys(favoured)].sort(
-    (left, right) => likabelityValue(right) - likabelityValue(left),
-  );
+  const sortedGameIds = [
+    ...Object.keys(favoured).filter((id) => !noGo.includes(id)),
+  ].sort((left, right) => likabelityValue(right) - likabelityValue(left));
 
   const { isValid, errorMessage } = isValidSession;
 
@@ -86,7 +86,7 @@ export const ResultList: React.FC = () => {
           label="Favourisiert:"
           items={sortedGameIds.map((id) => ({
             id,
-            label: boardGames[id]?.name ?? "",
+            label: `${boardGames[id]?.name ?? ""} (${favoured[id]} Stimme(n))`,
           }))}
         />
       )}
