@@ -1,7 +1,7 @@
 // BoardGameList.tsx
 import React from "react";
 import { List } from "./components/List";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import {
   activeSessionIdState,
   sessionsState,
@@ -13,7 +13,7 @@ import { generateId } from "./utils/generateId";
 const DUMMY_KEY = "new-session";
 
 export const SessionList: React.FC = () => {
-  const setSessionId = useSetRecoilState(activeSessionIdState);
+  const [currentSessionId, setSessionId] = useRecoilState(activeSessionIdState);
   const setSessions = useSetRecoilState(sessionsState);
   const summaries = useRecoilValue(sessionSummariesState);
 
@@ -42,7 +42,11 @@ export const SessionList: React.FC = () => {
       itemRenderer={(session) => {
         return (
           <div>
-            <h3 className="text-4xl text-gray-800">{session.summary}</h3>
+            <h3
+              className={`text-4xl text-gray-800 ${session.id === currentSessionId ? "underline" : ""}`}
+            >
+              {session.summary}
+            </h3>
           </div>
         );
       }}
