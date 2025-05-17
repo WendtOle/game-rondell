@@ -55,9 +55,19 @@ export const VoteCreationForm = () => {
           value={participant}
           onChange={(e) => setParticipant(e.target.value)}
         />
+        <div>
+          <h3 className="block text-3xl mb-2">Bereits nominierte Spiele</h3>
+          <ul>
+            {nominatedGames.map((game) => (
+              <li>{games[game]?.name}</li>
+            ))}
+          </ul>
+        </div>
         <MultiSelect
-          options={Object.values(games).map(({ id }) => id)}
-          label="Nominierte Spiele"
+          options={Object.values(games)
+            .map(({ id }) => id)
+            .filter((id) => !nominatedGames.includes(id))}
+          label="Weitere Spiele nominieren"
           selected={overallSelected()}
           onChange={(selected) => setSelected(selected)}
           getOptionLabel={(id) => games[id]?.name}
