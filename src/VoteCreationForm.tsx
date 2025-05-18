@@ -59,7 +59,9 @@ export const VoteCreationForm = () => {
       {nominatedGames.length > 0 && (
         <SimpleList
           label="Nominierte Spiele"
-          items={nominatedGames.map((id) => ({ id, label: games[id]?.name }))}
+          items={nominatedGames.map((id) => (
+            <li className="list-disc list-inside">{games[id]?.name}</li>
+          ))}
         />
       )}
       <MultiSelect
