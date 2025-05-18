@@ -10,13 +10,13 @@ import {
 } from "./state/sessions";
 import { boardGamesState } from "./state/boardGames";
 import { SimpleList } from "./components/SimpleList";
+import { Stars } from "./Stars";
 
 export const ResultList: React.FC = () => {
   const boardGames = useRecoilValue(boardGamesState);
   const session = useRecoilValue(sessionState);
   const nominatedGameIds = useRecoilValue(nominatedGamesState);
   const votes = useRecoilValue(votesState);
-  const isValidSession = useRecoilValue(isValidSessionState);
   const displayResults = session?.finished;
 
   if (!displayResults) {
@@ -27,78 +27,76 @@ export const ResultList: React.FC = () => {
     (acc, curr: Vote) => {
       const { noGoGames, heroGames } = curr;
       return {
-        noGo: [...(acc.noGo ?? []), ...(noGoGames ? [noGoGames] : [])],
+        noGo: [...new Set([...acc.noGo, ...(noGoGames ? [noGoGames] : [])])],
         favoured: {
           ...acc.favoured,
           ...(heroGames
             ? {
-                [heroGames]: (acc[heroGames] ?? 0) + 1,
+                [heroGames]: (acc.favoured[heroGames] ?? 0) + 1,
               }
             : {}),
         },
       };
     },
-    {} as { noGo: string[]; favoured: Record<string, number> },
+    { noGo: [], favoured: {} } as {
+      noGo: string[];
+      favoured: Record<string, number>;
+    },
   );
+  const { favoured, noGo } = result;
 
-  const likabelityValue = (gameId: string): number => {
-    if (result.noGo.includes(gameId)) {
-      return -100;
+  const favouredWithoutNoGo = Object.keys(favoured).reduce((acc, curr) => {
+    if (noGo.includes(curr)) {
+      return acc;
     }
-    return result.favoured[gameId] ?? 0;
-  };
+    return [...acc, curr];
+  }, [] as string[]);
 
-  const sortedGameIds = [...nominatedGameIds].sort(
-    (left, right) => likabelityValue(right) - likabelityValue(left),
+  const gamesNotMentioned = nominatedGameIds.filter(
+    (id) => !noGo.includes(id) && !Object.keys(favoured).includes(id),
   );
 
-  const { isValid, errorMessage } = isValidSession;
+  const possibleToPlay = [
+    ...favouredWithoutNoGo.sort(
+      (left, right) => favoured[right] - favoured[left],
+    ),
+    ...gamesNotMentioned,
+  ];
 
   return (
     <div className="flex gap-y-4 flex-col bg-white shadow-md p-6 rounded-lg">
+      {possibleToPlay.length === 0 ? (
+        <p>Kein Ergebnis gefunden</p>
+      ) : (
+        <SimpleList
+          label={
+            favouredWithoutNoGo.length > 0 ? "Favouriten:" : "Unentschieden"
+          }
+          items={possibleToPlay.map((id) => (
+            <li
+              className="flex items-center gap-x-4 list-disc list-inside"
+              key={id}
+            >
+              {boardGames[id]?.name ?? ""}
+              {favoured[id] && <Stars amount={favoured[id]} />}
+            </li>
+          ))}
+        />
+      )}
+      {noGo.length > 0 && (
+        <SimpleList
+          label="Ausgeschlossen:"
+          items={noGo.map((id) => (
+            <li key={id}>{boardGames[id]?.name ?? ""}</li>
+          ))}
+        />
+      )}
       <SimpleList
         label="Stimmen von: "
-        items={votes.map(({ participant, id }) => ({
-          label: participant,
-          id,
-        }))}
+        items={votes.map(({ id, participant }) => (
+          <li key={id}>{participant}</li>
+        ))}
       />
-      <div>
-        <h2 className="text-2xl">Abstimmungsergebnisse: </h2>
-        <List
-          items={sortedGameIds}
-          getId={(id) => id}
-          itemRenderer={(id) => {
-            if (!displayResults) {
-              return <></>;
-            }
-            const isNoGo = result.noGo.includes(id);
-            const amountOfStars = !isNoGo ? result.favoured[id] || 0 : 0;
-            return (
-              <div className="flex flex-row space-x-2">
-                <h3
-                  className={`text-xl text-gray-800 ${isNoGo && "line-through"}`}
-                >
-                  {boardGames[id]?.name}
-                </h3>
-                {displayResults && (
-                  <div className="flex mt-1">
-                    {[...Array(amountOfStars)].map((_, i) => (
-                      <svg
-                        key={i}
-                        className="w-4 h-4 text-yellow-500 fill-current"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          }}
-        />
-      </div>
     </div>
   );
 };
