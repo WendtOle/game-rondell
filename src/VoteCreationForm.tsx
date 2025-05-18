@@ -27,8 +27,8 @@ export const VoteCreationForm = () => {
   const onSave = () => {
     const newVote = {
       participant: participant ?? "",
-      noGoGames: blocked,
-      heroGames: hero,
+      noGoGames: blocked === "Bitte wählen" ? undefined : blocked,
+      heroGames: hero === "Bitte wählen" ? undefined : hero,
       nominatedGames: overallSelected(),
       id: generateId(),
       createdAt: Date.now(),
